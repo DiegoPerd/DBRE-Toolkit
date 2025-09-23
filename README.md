@@ -1,1 +1,1 @@
-Mi Toolkit para DBREs
+A collection of PowerShell scripts and Bicep templates for automating SQL Server administration and applying DBRE principles.
