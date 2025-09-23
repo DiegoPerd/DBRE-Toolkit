@@ -1,0 +1,44 @@
+{
+  "sqlInstance": "localhost",
+  "toolsToInstall": [
+    {
+      "name": "OlaHallengren-CommandExecute",
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandExecute.sql"
+    },
+    {
+      "name": "OlaHallengren-CommandLog",
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandLog.sql"
+    },
+    {
+      "name": "OlaHallengren-DatabaseIntegrityCheck",
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/DatabaseIntegrityCheck.sql"
+    },
+    {
+      "name": "OlaHallengren-IndexOptimize",
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/IndexOptimize.sql"
+    },
+    {
+      "name": "sp_whoisactive",
+      "url": "https://raw.githubusercontent.com/amachanic/sp_whoisactive/master/sp_WhoIsActive.sql"
+    },
+    {
+      "name": "sp_Blitz",
+      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_Blitz.sql"
+    },
+    {
+      "name": "sp_BlitzCache",
+      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_BlitzCache.sql"
+    }
+    
+  ],
+  "olaHallengrenJobConfig": {
+    "IndexOptimize": {
+      "FragmentationLow": "NULL",
+      "FragmentationMedium": "INDEX_REORGANIZE",
+      "FragmentationHigh": "INDEX_REBUILD_ONLINE",
+      "FragmentationLevel1": 5,
+      "FragmentationLevel2": 30,
+      "LogToTable": "Y"
+    }
+  }
+}

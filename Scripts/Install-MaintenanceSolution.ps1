@@ -23,38 +23,66 @@ function Install-SqlScriptFromUrl {
             Write-Host "$filename Instalado correctamente." -ForegroundColor Green
         }
         catch {
-            Write-Error "Falló la instalacion del fichero $filename. Error: $_"
+            Write-Error "Falló la instalacion del fichero $filename. Error: $($_.Exception.Message)"
         }
     }
     catch {
-        Write-Error "Falló la descarga del fichero $filename. Error: $_"                       
+        Write-Error "Falló la descarga del fichero $filename. Error: $($_.Exception.Message)"                       
     }        
+}
+
+function Install-OlaHallengrenJobs {
+    param(
+        [string]$ServerInstance,
+        [object]$Configuration
+    )
+
+    Write-Host "Creando trabajos del Agente SQL de Ola Hallengren..." -ForegroundColor Yellow
+
+    # --- 1. Crear el trabajo de Optimización de Índices ---
+    $indexParams = $Configuration.IndexOptimize
+    $templatePath = Join-Path -Path $PSScriptRoot -ChildPath "Templates\Create-Ola-Jobs.sql"
+
+    # Leemos la plantilla SQL
+    $sqlTemplate = Get-Content -Path $templatePath -Raw
+
+    # Reemplazamos los marcadores de posición
+    $finalSql = $sqlTemplate `
+        -replace '__FragmentationLow__', $indexParams.FragmentationLow `
+        -replace '__FragmentationMedium__', $indexParams.FragmentationMedium `
+        -replace '__FragmentationHigh__', $indexParams.FragmentationHigh `
+        -replace '__FragmentationLevel1__', $indexParams.FragmentationLevel1 `
+        -replace '__FragmentationLevel2__', $indexParams.FragmentationLevel2 `
+        -replace '__LogToTable__', $indexParams.LogToTable
+
+    # Ejecutamos el SQL final
+    try {
+        Invoke-Sqlcmd -ServerInstance $ServerInstance -Query $finalSql -TrustServerCertificate -ErrorAction Stop
+        Write-Host "Trabajos creados y configurados correctamente." -ForegroundColor Green
+    }
+    catch {
+        Write-Error "Falló la creación de los trabajos. Error: $($_.Exception.Message)"
+    }
+
 }
 
 
 # --- Configuración ---
-$sqlInstance = "localhost"
-$tools = @(
-    # --- Ola Hallengren ---
-    "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandExecute.sql",
-    "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandLog.sql",
-    "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/DatabaseIntegrityCheck.sql",
-    "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/IndexOptimize.sql",
+$projectRoot = Split-Path -Path $PSScriptRoot -Parent
+$configPath = Join-Path -Path $projectRoot -ChildPath "config.json"
+Write-Host "Cargando configuración desde: $configPath"
+$config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
 
-    # --- Adam Machanic ---
-    "https://raw.githubusercontent.com/amachanic/sp_whoisactive/master/sp_WhoIsActive.sql",
-
-    # --- Brent Ozar (First Responder Kit) ---
-    "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_Blitz.sql",
-    "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_BlitzCache.sql"
-)
-
-
+$sqlInstance = $config.sqlInstance
 
 Write-Host "Iniciando instalación de herramientas en la instancia '$sqlInstance'..." -ForegroundColor Yellow
 
-foreach ($toolUrl in $tools) {
-    Install-SqlScriptFromUrl -Url $toolUrl -ServerInstance $sqlInstance
+foreach ($tool in $config.toolsToInstall) {
+    Write-Host "Procesando $($tool.name)..."
+    Install-SqlScriptFromUrl -Url $tool.url -ServerInstance $sqlInstance
 }
+Install-OlaHallengrenJobs -ServerInstance $sqlInstance -Configuration $config
+
+
 
 Write-Host "Instalación de herramientas finalizada." -ForegroundColor Yellow
