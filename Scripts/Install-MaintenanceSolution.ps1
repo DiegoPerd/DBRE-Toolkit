@@ -40,7 +40,7 @@ function Install-OlaHallengrenJobs {
     Write-Host "Creando trabajos del Agente SQL de Ola Hallengren..." -ForegroundColor Yellow
 
     # --- 1. Crear el trabajo de Optimización de Índices ---
-    $indexParams = $Configuration.IndexOptimize
+    $indexParams = $Configuration.olaHallengrenJobConfig.IndexOptimize
     $templatePath = Join-Path -Path $PSScriptRoot -ChildPath "Templates\Create-Ola-Jobs.sql"
 
     # Leemos la plantilla SQL

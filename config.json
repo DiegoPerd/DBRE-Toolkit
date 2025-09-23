@@ -37,7 +37,7 @@
       "FragmentationMedium": "INDEX_REORGANIZE",
       "FragmentationHigh": "INDEX_REBUILD_ONLINE",
       "FragmentationLevel1": 5,
-      "FragmentationLevel2": 30,
+      "FragmentationLevel2": 40,
       "LogToTable": "Y"
     }
   }
