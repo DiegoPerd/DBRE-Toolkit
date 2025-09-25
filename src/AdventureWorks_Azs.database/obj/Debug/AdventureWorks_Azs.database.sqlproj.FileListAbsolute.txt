@@ -1,0 +1,12 @@
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.dacpac
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.deps.json
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.dll
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.pdb
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.GeneratedMSBuildEditorConfig.editorconfig
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.sourcelink.json
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\Model.xml
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\refactor.xml
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\postdeploy.sql
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\predeploy.sql
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.dll
+c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.pdb
