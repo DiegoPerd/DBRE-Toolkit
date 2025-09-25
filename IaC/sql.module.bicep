@@ -1,6 +1,6 @@
 // === Parámetros de Entrada ===
 @description('Nombre base para los recursos. Se usará para generar nombres únicos.')
-param baseName string = 'dbrelab'
+param baseName string 
 
 @description('La ubicación donde se crearán los recursos.')
 param location string = resourceGroup().location
@@ -52,3 +52,8 @@ resource allowAzureIpsRule 'Microsoft.Sql/servers/firewallRules@2024-11-01-previ
     endIpAddress: '0.0.0.0'
   }
 }
+
+// === Salidas del Módulo ===
+// Información que este módulo devuelve para que otros la usen
+output sqlServerName string = sqlServer.name
+output sqlDatabaseName string = sqlDatabase.name
