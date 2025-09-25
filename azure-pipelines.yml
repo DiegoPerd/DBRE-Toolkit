@@ -1,0 +1,27 @@
+# Pipeline de Build para el proyecto de BBDD AdventureWorks.Database
+
+trigger:
+- main
+
+pool:
+  vmImage: 'windows-latest'
+
+steps:
+# La tarea VSBuild puede compilar directamente un .sqlproj.
+# Apuntamos a la ruta específica de nuestro proyecto.
+- task: VSBuild@1
+  displayName: 'Build AdventureWorks.Database project'
+  inputs:
+    solution: 'src/AdventureWorks_Azs.Database/AdventureWorks_Azs.Database.sqlproj' # 
+    msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true'
+    platform: 'Any CPU'
+    configuration: 'Release'
+
+# El resto del pipeline para publicar el artefacto sigue igual.
+# El .dacpac se generará dentro de la carpeta de artefactos de la build.
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Dacpac Artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)'
+    artifact: 'dacpac'
+    publishLocation: 'pipeline'
