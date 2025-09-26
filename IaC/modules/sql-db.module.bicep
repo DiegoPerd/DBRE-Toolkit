@@ -1,0 +1,62 @@
+// IaC/sql.module.bicep
+// Defines the SQL Server, SQL Database and firewall rule.
+
+// === Input Parameters ===
+@description('Base name for the resources.')
+param baseName string 
+
+@description('The location/region where the resources will be deployed.')
+param location string 
+
+@description('The administrator login name for the SQL server.')
+param sqlAdminLogin string
+
+@description('The administrator password for the SQL server.')
+@secure()
+param sqlAdminPassword string
+
+
+// === Variables ===
+// Names for our resources
+var sqlServerName = 'sql-${baseName}-${uniqueString(resourceGroup().id)}'
+var sqlDatabaseName = 'db-${baseName}'
+
+
+// === Resources==
+
+// Create the SQL Server instance
+resource sqlServer 'Microsoft.Sql/servers@2023-08-01' = {
+  name: sqlServerName
+  location: location
+  properties: {
+    administratorLogin: sqlAdminLogin
+    administratorLoginPassword: sqlAdminPassword
+  }
+}
+
+// Create the SQL Database
+resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-08-01' = {
+  parent: sqlServer
+  name: sqlDatabaseName
+  location: location
+  sku: {
+    name: 'GP_S_Gen5'
+    tier: 'GeneralPurpose'
+    capacity: 1 
+  }
+}
+
+// Create the Firewall rule to allow Azure services to connect.
+resource allowAzureIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
+  parent: sqlServer
+  name: 'AllowAllWindowsAzureIps'
+  properties: {
+    startIpAddress: '0.0.0.0'
+    endIpAddress: '0.0.0.0'
+  }
+}
+
+// === Outputs ===
+
+output sqlServerName string = sqlServer.name
+output sqlDatabaseName string = sqlDatabase.name
