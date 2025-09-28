@@ -18,6 +18,9 @@ param sqlAdminPassword string
 @description('Id of the DCR for association with SQLDb')
 param dataCollectionRuleId string 
 
+@description('Id for Log Analytics Workspace')
+param logAnalyticsWorkspaceId string
+
 // === Variables ===
 // Names for our resources
 var sqlServerName = 'sql-${baseName}-${uniqueString(resourceGroup().id)}'
@@ -55,6 +58,35 @@ resource dcrAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-
   scope: sqlDatabase 
   properties: {
     dataCollectionRuleId: dataCollectionRuleId
+  }
+}
+
+// THE DIAGNOSTIC SETTING IS NOW CREATED HERE
+resource sqlDbDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
+  name: 'sql-db-diagnostics'
+  scope: sqlDatabase 
+  properties: {
+    workspaceId: logAnalyticsWorkspaceId
+    logs: [
+      {
+        category: 'SQLInsights'
+        enabled: true
+      }
+      {
+        category: 'Errors'
+        enabled: true
+      }
+      {
+        category: 'Blocking'
+        enabled: true
+      }
+    ]
+    metrics: [
+      {
+        category: 'AllMetrics'
+        enabled: true
+      }
+    ]
   }
 }
 
