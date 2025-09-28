@@ -13,7 +13,20 @@ param(
 
 # === Configuration ===
 $resourceGroupName = "rg-dbre-lab" # Make the RG name dynamic
+$location = "NorthEurope"
 $baseIaCPath = ".\IaC\"
+$deploymentName = "dbre-toolkit-deployment-$(Get-Date -Format 'yyyyMMdd-HHmm')" # Unique name for the deployment
+
+# Polling configuration
+$maxRetries = 20 # 20 retries * 30 seconds = 10 minutes timeout for SQL DB
+if ($DeploymentType -eq 'sql-mi') {
+    $maxRetries = 120 # 120 retries * 3 minutes = 6 hours timeout for SQL MI
+}
+$retryIntervalSeconds = 30
+if ($DeploymentType -eq 'sql-mi') {
+    $retryIntervalSeconds = 180 # Check every 3 minutes for MI
+}
+
 
 # === Logic ===
 
@@ -41,8 +54,51 @@ if (-not (Test-Path $parametersFile)) {
 
 # Construct and execute the deployment command
 try {
-    az deployment group create --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --no-wait | Out-Null
+    az group create --name $resourceGroupName --location $location | Out-Null
+    az deployment group create --name $deploymentName --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --no-wait | Out-Null
     Write-Host "Deployment command sent to Azure successfully." -ForegroundColor Green
+
+     # --- CONFIGURATION PHASE ---
+    Write-Host "Starting post-deployment configuration..." -ForegroundColor Yellow
+    
+     # --- POLLING PHASE ---
+    for ($i = 1; $i -le $maxRetries; $i++) {
+        $deploymentState = az deployment group show --name $deploymentName --resource-group $resourceGroupName --query "properties.provisioningState" --output tsv
+        Write-Host "Attempt $i/${maxRetries}: Deployment state is '$($deploymentState)'..."
+
+        if ($deploymentState -eq 'Succeeded') {
+            Write-Host "Provisioning completed successfully!" -ForegroundColor Green
+            break # Exit the loop
+        }
+        if ($deploymentState -eq 'Failed' -or $deploymentState -eq 'Canceled') {
+            throw "Infrastructure provisioning failed with state: $($deploymentState). Please check the Azure Portal for details."
+        }
+        if ($i -eq $maxRetries) {
+            throw "Timeout reached. Provisioning is taking too long. Please check the Azure Portal."
+        }
+        
+        Start-Sleep -Seconds $retryIntervalSeconds
+    }
+
+
+    # Get the server name from the deployment outputs
+    $sqlServerName = az deployment group show --name $deploymentName --resource-group $resourceGroupName --query "properties.outputs.deployedSqlServerName.value" --output tsv
+    if ([string]::IsNullOrEmpty($sqlServerName)) {
+        throw "Could not retrieve SQL Server name from deployment outputs."
+    }
+    
+    # Determine if Agent Jobs should be created based on deployment type
+    $createJobs = $false
+    if ($DeploymentType -eq 'sql-mi') {
+        $createJobs = $true
+    }
+
+    Write-Host "Running installation script against '$($sqlServerName)'..."
+    
+    # Call the installation script, passing the server name and job flag as parameters
+    .\Scripts\Install-MaintenanceSolution.ps1 -ServerInstance $sqlServerName -CreateJobs $createJobs
+    
+    Write-Host "Configuration finished successfully." -ForegroundColor Green
 }
 catch {
     Write-Error "Deployment failed. Error: $($_.Exception.Message)"

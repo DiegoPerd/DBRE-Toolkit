@@ -1,5 +1,4 @@
 {
-  "sqlInstance": "localhost",
   "toolsToInstall": [
     {
       "name": "OlaHallengren-CommandExecute",
