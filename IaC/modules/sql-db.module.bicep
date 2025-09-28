@@ -15,6 +15,8 @@ param sqlAdminLogin string
 @secure()
 param sqlAdminPassword string
 
+@description('Id of the DCR for association with SQLDb')
+param dataCollectionRuleId string 
 
 // === Variables ===
 // Names for our resources
@@ -46,6 +48,16 @@ resource sqlDatabase 'Microsoft.Sql/servers/databases@2023-08-01' = {
   }
 }
 
+// === Resource Association ===
+// This resource is deployed at the resource group level, but targets the database via the 'scope' property.
+resource dcrAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-03-11' = {
+  name: 'dcra-${baseName}'
+  scope: sqlDatabase 
+  properties: {
+    dataCollectionRuleId: dataCollectionRuleId
+  }
+}
+
 // Create the Firewall rule to allow Azure services to connect.
 resource allowAzureIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
   parent: sqlServer
@@ -56,7 +68,10 @@ resource allowAzureIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
   }
 }
 
+
+
 // === Outputs ===
 
 output sqlServerName string = sqlServer.name
 output sqlDatabaseName string = sqlDatabase.name
+

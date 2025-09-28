@@ -14,16 +14,28 @@ param sqlAdminLogin string
 @secure()
 param sqlAdminPassword string
 
+@description('The name of the Log Analytics Workspace.')
+param logAnalyticsWorkspaceName string
+
 // === Module Deployments ===
 
+module dcrModule 'modules/dcr.module.bicep' = {
+  name: 'dcrDeployment'
+  params:{
+    baseName: baseName
+    logAnalyticsWorkspaceName: logAnalyticsWorkspaceName    
+    location: location    
+  }
+}
 // Deploy the SQL Database module.
 module sqlModule 'modules/sql-db.module.bicep' = {
-  name: 'sqlDeployment'
+  name: 'sqlDeployment'  
   params:{
     location: location
     sqlAdminLogin: sqlAdminLogin
     sqlAdminPassword: sqlAdminPassword
     baseName: baseName
+    dataCollectionRuleId: dcrModule.outputs.dataCollectionRuleId
   }
 }
 
@@ -32,3 +44,4 @@ module sqlModule 'modules/sql-db.module.bicep' = {
 
 // Module outputs can be used by other resources or returned by the deployment.
 output deployedSqlServerName string = sqlModule.outputs.sqlServerName
+
