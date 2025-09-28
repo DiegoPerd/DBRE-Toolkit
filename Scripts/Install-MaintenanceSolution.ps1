@@ -5,7 +5,10 @@ function Install-SqlScriptFromUrl {
         [string]$Url,
 
         [Parameter(Mandatory=$true)]
-        [string]$ServerInstance
+        [string]$ServerInstance,
+
+        [Parameter(Mandatory=$false)]
+        [bool]$CreateJobs=$false
     )
 
     $fileName = Split-Path -Path $Url -Leaf
@@ -19,7 +22,7 @@ function Install-SqlScriptFromUrl {
         Write-Host "Descarga completada con éxito en: $destinationPath" -ForegroundColor Green
         # Instalamos en la instancia.
         try {                
-            Invoke-Sqlcmd -InputFile $destinationPath -ServerInstance "localhost" -TrustServerCertificate
+            Invoke-Sqlcmd -InputFile $destinationPath -ServerInstance $ServerInstance -TrustServerCertificate
             Write-Host "$filename Instalado correctamente." -ForegroundColor Green
         }
         catch {
@@ -73,7 +76,7 @@ $configPath = Join-Path -Path $projectRoot -ChildPath "config.json"
 Write-Host "Cargando configuración desde: $configPath"
 $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
 
-$sqlInstance = $config.sqlInstance
+$sqlInstance = $ServerInstance
 
 Write-Host "Iniciando instalación de herramientas en la instancia '$sqlInstance'..." -ForegroundColor Yellow
 
@@ -81,7 +84,10 @@ foreach ($tool in $config.toolsToInstall) {
     Write-Host "Procesando $($tool.name)..."
     Install-SqlScriptFromUrl -Url $tool.url -ServerInstance $sqlInstance
 }
-Install-OlaHallengrenJobs -ServerInstance $sqlInstance -Configuration $config
+
+if ($CreateJobs){
+    Install-OlaHallengrenJobs -ServerInstance $sqlInstance -Configuration $config
+}
 
 
 
