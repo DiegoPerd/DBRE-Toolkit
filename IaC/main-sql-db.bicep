@@ -29,8 +29,8 @@ module keyVaultModule './modules/keyvault.module.bicep' = {
   params: {
     baseName: baseName
     location: location        
-    secretValue: sqlAdminPassword 
-    secretName: 'sqlAdminPassword'
+    sqlAdminLogin: sqlAdminLogin
+    sqlAdminPassword: sqlAdminPassword
     principalId: principalId 
   }
 }
