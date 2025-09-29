@@ -17,41 +17,57 @@ param sqlAdminPassword string
 @description('The public IP address of the client machine for firewall access.')
 param clientIpAddress string 
 
+@description('The Object ID of the principal to grant Key Vault access.')
+param principalId string 
+
+
 // === Module Deployments ===
 
-// Step 1: Deploy the Log Analytics Workspace
+// Deploy the Key Vault and store the SQL password in it
+module keyVaultModule './modules/keyvault.module.bicep' = {
+  name: 'keyVaultDeployment'
+  params: {
+    baseName: baseName
+    location: location        
+    secretValue: sqlAdminPassword 
+    secretName: 'sqlAdminPassword'
+    principalId: principalId 
+  }
+}
+
+// Deploy the Log Analytics Workspace
 module logAnalyticsModule 'modules/log-analytics.module.bicep' = {
   name: 'logAnalyticsDeployment'
   params: {
-    location: location
     baseName: baseName
-  }
-}
-
-module dcrModule 'modules/dcr.module.bicep' = {
-  name: 'dcrDeployment'
-  params:{
-    baseName: baseName
-    logAnalyticsWorkspaceName: logAnalyticsModule.outputs.workspaceName    
     location: location    
   }
 }
-// Deploy the SQL Database module.
+
+// Deploy the Data Collection Rule
+module dcrModule 'modules/dcr.module.bicep' = {
+  name: 'dcrDeployment'
+  params:{
+    baseName: baseName    
+    location: location    
+    logAnalyticsWorkspaceName: logAnalyticsModule.outputs.workspaceName    
+  }
+}
+
+// Deploy the SQL Database module
 module sqlModule 'modules/sql-db.module.bicep' = {
   name: 'sqlDeployment'  
   params:{
+    baseName: baseName
     location: location
     sqlAdminLogin: sqlAdminLogin
-    sqlAdminPassword: sqlAdminPassword
-    baseName: baseName
+    sqlAdminPassword: sqlAdminPassword    
     dataCollectionRuleId: dcrModule.outputs.dataCollectionRuleId
     logAnalyticsWorkspaceId: logAnalyticsModule.outputs.workspaceId    
-    clientIpAddress: clientIpAddress
+    clientIpAddress: clientIpAddress    
   }
 }
 
 // === Outputs ===
-
-
 output sqlServerName string = sqlModule.outputs.sqlServerName
-
+output keyVaultName string = keyVaultModule.outputs.keyVaultName

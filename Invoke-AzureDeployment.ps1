@@ -62,31 +62,25 @@ try {
         throw "Could not determine client IP address."
     }
     Write-Host "Client IP found: $clientIpAddress" -ForegroundColor Cyan
-    
+
+    # === NEW: Get the Object ID of the signed-in user ===
+    Write-Host "Getting the Object ID of the current user..."
+    $currentUserObjectId = az ad signed-in-user show --query "id" --output tsv
+    if ([string]::IsNullOrEmpty($currentUserObjectId)) {
+        throw "Could not get the Object ID of the signed-in user. Please run 'az login'."
+    }
+    Write-Host "Current user Object ID: $($currentUserObjectId)" -ForegroundColor Cyan
+
     az group create --name $resourceGroupName --location $location | Out-Null
-    az deployment group create --name $deploymentName --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --parameters clientIpAddress=$clientIpAddress | Out-Null
+     az deployment group create --name $deploymentName --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --parameters clientIpAddress=$clientIpAddress principalId=$currentUserObjectId | Out-Null
     Write-Host "Deployment command sent to Azure successfully." -ForegroundColor Green
 
-     # --- CONFIGURATION PHASE ---
+
+
+    # --- CONFIGURATION PHASE ---
     Write-Host "Starting post-deployment configuration..." -ForegroundColor Yellow
-    # --- Read parameters from the .bicepparam file ---
-    Write-Host "Reading credentials from parameters file..."
-    $paramFileContent = Get-Content -Path $parametersFile -Raw
-    # Use regex to find the admin login and password
-    $sqlAdminLogin = $paramFileContent | Select-String -Pattern "param sqlAdminLogin = '(.*)'" | ForEach-Object { $_.Matches.Groups[1].Value }
-    $sqlAdminPassword = $paramFileContent | Select-String -Pattern "param sqlAdminPassword = '(.*)'" | ForEach-Object { $_.Matches.Groups[1].Value }
-
-    if ([string]::IsNullOrEmpty($sqlAdminLogin) -or [string]::IsNullOrEmpty($sqlAdminPassword)) {
-        throw "Could not parse sqlAdminLogin or sqlAdminPassword from '$($parametersFile)'. Please check the file."
-    }   
-
-
-    # Create a secure PSCredential object
-    $securePassword = ConvertTo-SecureString -String $sqlAdminPassword -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential($sqlAdminLogin, $securePassword)
-    Write-Host "Credentials created securely for user '$($sqlAdminLogin)'."
-
-     # --- POLLING PHASE ---
+    
+    # --- POLLING PHASE ---
     for ($i = 1; $i -le $maxRetries; $i++) {
         $deploymentState = az deployment group show --name $deploymentName --resource-group $resourceGroupName --query "properties.provisioningState" --output tsv
         Write-Host "Attempt $i/${maxRetries}: Deployment state is '$($deploymentState)'..."
@@ -105,6 +99,20 @@ try {
         Start-Sleep -Seconds $retryIntervalSeconds
     }
 
+    # Get the Key Vault name from the deployment outputs
+    $keyVaultName = az deployment group show --name $deploymentName --resource-group $resourceGroupName --query "properties.outputs.keyVaultName.value" --output tsv
+
+    # Securely retrieve the SQL password from Azure Key Vault
+    Write-Host "Retrieving SQL password from Key Vault '$($keyVaultName)'..."
+    $sqlAdminPassword = az keyvault secret show --vault-name $keyVaultName --name "sqlAdminPassword" --query "value" --output tsv
+
+    # Get the SQL Admin Login from the parameters file 
+    $paramFileContent = Get-Content -Path $parametersFile -Raw
+    $sqlAdminLogin = $paramFileContent | Select-String -Pattern "param sqlAdminLogin = '(.*)'" | ForEach-Object { $_.Matches.Groups[1].Value }
+
+    # Create the PSCredential object
+    $securePassword = ConvertTo-SecureString -String $sqlAdminPassword -AsPlainText -Force
+    $credential = New-Object System.Management.Automation.PSCredential($sqlAdminLogin, $securePassword)
 
     # Get the server name from the deployment outputs
     $sqlServerName = az deployment group show --name $deploymentName --resource-group $resourceGroupName --query "properties.outputs.sqlServerName.value" --output tsv
@@ -120,7 +128,7 @@ try {
     # Call the installation script, passing the server name and job flag as parameters
     $fullyQualifiedServerName = "$($sqlServerName).database.windows.net"
     .\Scripts\Install-MaintenanceSolution.ps1 -ServerInstance $fullyQualifiedServerName -CreateJobs $createJobs -Credential $credential
-    
+   
     Write-Host "Configuration finished successfully." -ForegroundColor Green
 }
 catch {
