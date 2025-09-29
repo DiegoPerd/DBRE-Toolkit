@@ -2,33 +2,39 @@
   "toolsToInstall": [
     {
       "name": "OlaHallengren-CommandExecute",
-      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandExecute.sql"
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandExecute.sql",
+      "objectType": "P"
     },
     {
       "name": "OlaHallengren-CommandLog",
-      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandLog.sql"
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/CommandLog.sql",
+      "objectType": "T"      
     },
     {
       "name": "OlaHallengren-DatabaseIntegrityCheck",
-      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/DatabaseIntegrityCheck.sql"
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/DatabaseIntegrityCheck.sql",
+      "objectType": "P"
     },
     {
       "name": "OlaHallengren-IndexOptimize",
-      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/IndexOptimize.sql"
+      "url": "https://raw.githubusercontent.com/olahallengren/sql-server-maintenance-solution/master/IndexOptimize.sql",
+      "objectType": "P"
     },
     {
       "name": "sp_whoisactive",
-      "url": "https://raw.githubusercontent.com/amachanic/sp_whoisactive/master/sp_WhoIsActive.sql"
+      "url": "https://raw.githubusercontent.com/amachanic/sp_whoisactive/master/sp_WhoIsActive.sql",
+      "objectType": "P"
     },
     {
       "name": "sp_Blitz",
-      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_Blitz.sql"
+      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_Blitz.sql",
+      "objectType": "P"
     },
     {
       "name": "sp_BlitzCache",
-      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_BlitzCache.sql"
-    }
-    
+      "url": "https://raw.githubusercontent.com/BrentOzarULTD/SQL-Server-First-Responder-Kit/main/sp_BlitzCache.sql",
+      "objectType": "P"
+    }    
   ],
   "olaHallengrenJobConfig": {
     "IndexOptimize": {
