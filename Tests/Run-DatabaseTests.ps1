@@ -4,7 +4,7 @@
 
 Write-Host "Fetching Azure resource names..."
 
-$resourceGroup = "rg-dbre-lab"
+$resourceGroup = az group list --query "[0].name" -o tsv
 $serverName = az sql server list --resource-group $resourceGroup --query "[0].name" -o tsv
 $sqlFqdn = "$($serverName).database.windows.net"
 $dbName = az sql db list --resource-group $resourceGroup --server $serverName --query "[0].name" -o tsv
