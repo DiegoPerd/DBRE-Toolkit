@@ -72,7 +72,7 @@ try {
     Write-Host "Current user Object ID: $($currentUserObjectId)" -ForegroundColor Cyan
 
     az group create --name $resourceGroupName --location $location | Out-Null
-     az deployment group create --name $deploymentName --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --parameters clientIpAddress=$clientIpAddress principalId=$currentUserObjectId | Out-Null
+    az deployment group create --name $deploymentName --resource-group $resourceGroupName --template-file $templateFile --parameters $parametersFile --parameters clientIpAddress=$clientIpAddress principalId=$currentUserObjectId | Out-Null
     Write-Host "Deployment command sent to Azure successfully." -ForegroundColor Green
 
 
@@ -106,9 +106,9 @@ try {
     Write-Host "Retrieving SQL password from Key Vault '$($keyVaultName)'..."
     $sqlAdminPassword = az keyvault secret show --vault-name $keyVaultName --name "sqlAdminPassword" --query "value" --output tsv
 
-    # Get the SQL Admin Login from the parameters file 
-    $paramFileContent = Get-Content -Path $parametersFile -Raw
-    $sqlAdminLogin = $paramFileContent | Select-String -Pattern "param sqlAdminLogin = '(.*)'" | ForEach-Object { $_.Matches.Groups[1].Value }
+    # Securely retrieve the SQL admin username from Azure Key Vault
+    Write-Host "Retrieving SQL admin username from Key Vault '$($keyVaultName)'..."
+    $sqlAdminLogin = az keyvault secret show --vault-name $keyVaultName --name "sqlAdminLogin" --query "value" --output tsv
 
     # Create the PSCredential object
     $securePassword = ConvertTo-SecureString -String $sqlAdminPassword -AsPlainText -Force

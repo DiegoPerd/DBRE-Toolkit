@@ -8,12 +8,13 @@ param location string
 @description('The base name for the resources.')
 param baseName string
 
-@description('The value of the secret to store.')
-@secure()
-param secretValue string
+@description('The value for the SQL admin login.')
+param sqlAdminLogin string // <-- NEW
 
-@description('The name of the secret to create')
-param secretName string
+@description('The value of the SQL admin password.')
+@secure()
+param sqlAdminPassword string // <-- Renamed from secretValue
+
 
 @description('The object ID of the user or principal to grant secret access to.')
 param principalId string // user's ID
@@ -49,9 +50,18 @@ resource keyVault 'Microsoft.KeyVault/vaults@2024-11-01' = {
 // Store the provided password as a secret in the Key Vault
 resource sqlPasswordSecret 'Microsoft.KeyVault/vaults/secrets@2024-11-01' = {
   parent: keyVault
-  name: secretName
+  name: 'sqlAdminPassword'
   properties: {
-    value: secretValue
+    value: sqlAdminPassword
+  }
+}
+
+// Create a second secret for the SQL username
+resource sqlUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2024-11-01' = {
+  parent: keyVault
+  name: 'sqlAdminLogin' 
+  properties: {
+    value: sqlAdminLogin
   }
 }
 
