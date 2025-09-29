@@ -24,10 +24,9 @@ param logAnalyticsWorkspaceId string
 @description('The public IP address of the client machine for firewall access.')
 param clientIpAddress string 
 
-
 // === Variables ===
 // Names for our resources
-var sqlServerName = 'sql-${baseName}-${uniqueString(resourceGroup().id)}'
+var sqlServerName = 'sql-${baseName}'
 var sqlDatabaseName = 'db-${baseName}'
 
 
