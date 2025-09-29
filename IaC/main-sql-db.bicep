@@ -14,11 +14,13 @@ param sqlAdminLogin string
 @secure()
 param sqlAdminPassword string
 
+@description('The public IP address of the client machine for firewall access.')
+param clientIpAddress string 
 
 // === Module Deployments ===
 
 // Step 1: Deploy the Log Analytics Workspace
-module logAnalyticsModule './modules/log-analytics.module.bicep' = {
+module logAnalyticsModule 'modules/log-analytics.module.bicep' = {
   name: 'logAnalyticsDeployment'
   params: {
     location: location
@@ -44,8 +46,12 @@ module sqlModule 'modules/sql-db.module.bicep' = {
     baseName: baseName
     dataCollectionRuleId: dcrModule.outputs.dataCollectionRuleId
     logAnalyticsWorkspaceId: logAnalyticsModule.outputs.workspaceId    
+    clientIpAddress: clientIpAddress
   }
 }
 
+// === Outputs ===
 
+
+output sqlServerName string = sqlModule.outputs.sqlServerName
 

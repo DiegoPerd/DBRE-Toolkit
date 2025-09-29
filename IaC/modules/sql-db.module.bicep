@@ -21,6 +21,10 @@ param dataCollectionRuleId string
 @description('Id for Log Analytics Workspace')
 param logAnalyticsWorkspaceId string
 
+@description('The public IP address of the client machine for firewall access.')
+param clientIpAddress string 
+
+
 // === Variables ===
 // Names for our resources
 var sqlServerName = 'sql-${baseName}-${uniqueString(resourceGroup().id)}'
@@ -69,15 +73,7 @@ resource sqlDbDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-prev
     workspaceId: logAnalyticsWorkspaceId
     logs: [
       {
-        category: 'SQLInsights'
-        enabled: true
-      }
-      {
-        category: 'Errors'
-        enabled: true
-      }
-      {
-        category: 'Blocking'
+        categoryGroup: 'allLogs'
         enabled: true
       }
     ]
@@ -100,6 +96,15 @@ resource allowAzureIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
   }
 }
 
+// Create the Firewall rule to allow deployment machine to connect.
+resource allowClientIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
+  parent: sqlServer
+  name: 'allowClientIpsRule'
+  properties: {
+    startIpAddress: clientIpAddress
+    endIpAddress: clientIpAddress
+  }
+}
 
 
 // === Outputs ===
