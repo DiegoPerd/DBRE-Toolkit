@@ -12,7 +12,7 @@ param(
 )
 
 # === Configuration ===
-$resourceGroupName = "rg-dbre-lab" # Make the RG name dynamic
+$resourceGroupName = "rg-dbre-lab-$($EnvironmentName)" # Make the RG name dynamic
 $location = "NorthEurope"
 $baseIaCPath = ".\IaC\"
 $deploymentName = "dbre-toolkit-deployment-$(Get-Date -Format 'yyyyMMdd-HHmm')" # Unique name for the deployment
