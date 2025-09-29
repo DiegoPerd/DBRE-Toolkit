@@ -1,3 +1,16 @@
+
+[CmdletBinding()]
+param(
+    [Parameter(Mandatory=$true)]
+    [string]$ServerInstance,
+
+    [Parameter(Mandatory=$true)]
+    [pscredential]$Credential, 
+
+    [Parameter(Mandatory=$false)]
+    [bool]$CreateJobs = $false
+)
+
 function Install-SqlScriptFromUrl {
     [CmdletBinding()]
     param(
@@ -7,8 +20,9 @@ function Install-SqlScriptFromUrl {
         [Parameter(Mandatory=$true)]
         [string]$ServerInstance,
 
-        [Parameter(Mandatory=$false)]
-        [bool]$CreateJobs=$false
+        [Parameter(Mandatory=$true)]
+        [pscredential]$Credential
+
     )
 
     $fileName = Split-Path -Path $Url -Leaf
@@ -22,7 +36,7 @@ function Install-SqlScriptFromUrl {
         Write-Host "Descarga completada con éxito en: $destinationPath" -ForegroundColor Green
         # Instalamos en la instancia.
         try {                
-            Invoke-Sqlcmd -InputFile $destinationPath -ServerInstance $ServerInstance -TrustServerCertificate
+            Invoke-Sqlcmd -InputFile $destinationPath -ServerInstance $ServerInstance -TrustServerCertificate  -Credential $Credential -ErrorAction Stop
             Write-Host "$filename Instalado correctamente." -ForegroundColor Green
         }
         catch {
@@ -35,8 +49,14 @@ function Install-SqlScriptFromUrl {
 }
 
 function Install-OlaHallengrenJobs {
-    param(
+    param(        
+        [Parameter(Mandatory=$true)]
         [string]$ServerInstance,
+
+        [Parameter(Mandatory=$true)]
+        [pscredential]$Credential,
+
+        [Parameter(Mandatory=$true)]
         [object]$Configuration
     )
 
@@ -60,7 +80,7 @@ function Install-OlaHallengrenJobs {
 
     # Ejecutamos el SQL final
     try {
-        Invoke-Sqlcmd -ServerInstance $ServerInstance -Query $finalSql -TrustServerCertificate -ErrorAction Stop
+        Invoke-Sqlcmd -ServerInstance $ServerInstance -Query $finalSql -TrustServerCertificate -Credential $Credential  -ErrorAction Stop
         Write-Host "Trabajos creados y configurados correctamente." -ForegroundColor Green
     }
     catch {
@@ -82,11 +102,11 @@ Write-Host "Iniciando instalación de herramientas en la instancia '$sqlInstance
 
 foreach ($tool in $config.toolsToInstall) {
     Write-Host "Procesando $($tool.name)..."
-    Install-SqlScriptFromUrl -Url $tool.url -ServerInstance $sqlInstance
+    Install-SqlScriptFromUrl -Url $tool.url -ServerInstance $sqlInstance -Credential $Credential
 }
 
 if ($CreateJobs){
-    Install-OlaHallengrenJobs -ServerInstance $sqlInstance -Configuration $config
+    Install-OlaHallengrenJobs -ServerInstance $sqlInstance -Configuration $config -Credential $Credential
 }
 
 
