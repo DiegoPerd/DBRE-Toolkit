@@ -137,4 +137,3 @@ function Invoke-AzureDeployment {
     }
 }
 
-Export-ModuleMember -Function Invoke-AzureDeployment
