@@ -9,12 +9,11 @@ param location string
 param baseName string
 
 @description('The value for the SQL admin login.')
-param sqlAdminLogin string // <-- NEW
+param sqlAdminLogin string 
 
 @description('The value of the SQL admin password.')
 @secure()
-param sqlAdminPassword string // <-- Renamed from secretValue
-
+param sqlAdminPassword string 
 
 @description('The object ID of the user or principal to grant secret access to.')
 param principalId string // user's ID
