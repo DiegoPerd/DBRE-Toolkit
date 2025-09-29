@@ -19,7 +19,7 @@ $testData = @{
 }
 
 # Step 2: Create a Pester "Container" that bundles the test file and its data.
-$container = New-PesterContainer -Path '.\Database.tests.ps1' -Data $testData
+$container = New-PesterContainer -Path '.\Database.Tests.ps1' -Data $testData
 
 Write-Host "Executing database test suite..."
 
