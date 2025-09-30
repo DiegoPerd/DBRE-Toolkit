@@ -31,6 +31,7 @@ This toolkit is built around a set of modular and automated components:
 ├── config.json         # Manifest for tool installation
 ├── Invoke-AzureDeployment.ps1 # Main orchestration script
 └── README.md
+```
 
 ## 🚀 How to Use
 
@@ -38,19 +39,23 @@ This toolkit is built around a set of modular and automated components:
 Deploys the Azure infrastructure defined in the `/IaC` folder.
 
 # Deploy an Azure SQL Database environment
+```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-db -EnvironmentName dev
-
+```
 # Deploy an Azure SQL Managed Instance environment
+```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-mi -EnvironmentName dev
-
+```
 ### 2. Run Tests
 
 # Run Database Tests
+```powershell
 .\Tests\Run-DatabaseTests.ps1 
-
+```
 # Run Database Tests
+```powershell
 .\Tests\Run-DeploymentTests.ps1 
-
+```
 ## 🛠️ Technologies Used
 
 * PowerShell 7
