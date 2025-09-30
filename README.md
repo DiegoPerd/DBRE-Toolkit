@@ -38,21 +38,21 @@ This toolkit is built around a set of modular and automated components:
 ### 1. Deploy Infrastructure
 Deploys the Azure infrastructure defined in the `/IaC` folder.
 
-# Deploy an Azure SQL Database environment
+#### Deploy an Azure SQL Database environment
 ```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-db -EnvironmentName dev
 ```
-# Deploy an Azure SQL Managed Instance environment
+#### Deploy an Azure SQL Managed Instance environment
 ```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-mi -EnvironmentName dev
 ```
 ### 2. Run Tests
 
-# Run Database Tests
+#### Run Database Tests
 ```powershell
 .\Tests\Run-DatabaseTests.ps1 
 ```
-# Run Database Tests
+#### Run Database Tests
 ```powershell
 .\Tests\Run-DeploymentTests.ps1 
 ```
