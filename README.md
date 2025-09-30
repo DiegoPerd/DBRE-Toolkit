@@ -17,12 +17,14 @@ This toolkit is built around a set of modular and automated components:
 * **Secure Secret Management:** Implements **Azure Key Vault** to store and retrieve database credentials securely during the deployment and configuration phases, avoiding plain-text secrets.
 
 ## 📁 Project Structure
+
+```text
 .
 ├── IaC/                # Bicep templates for Infrastructure as Code
 │   ├── main-*.bicep    # Entry points for different deployments
 │   └── modules/        # Reusable Bicep modules
 ├── Scripts/            # PowerShell scripts for post-deployment configuration
-├── src/                # Source code for the database project
+├── src/                # Source code for the database project (.sqlproj)
 ├── Tests/              # Pester tests (Integration and Database)
 ├── .gitignore
 ├── azure-pipelines.yml # CI pipeline definition
@@ -51,12 +53,10 @@ Deploys the Azure infrastructure defined in the `/IaC` folder.
 
 ## 🛠️ Technologies Used
 
-PowerShell 7
-Bicep
-Azure CLI
-Git & GitHub
-Azure DevOps (Pipelines)
-Pester
-Azure SQL
-Azure Key Vault
-Azure Monitor
+* PowerShell 7
+* Bicep
+* Azure CLI
+* Git & GitHub
+* Azure DevOps (Pipelines)
+* Pester
+* Azure SQL, Azure Key Vault, Azure Monitor
