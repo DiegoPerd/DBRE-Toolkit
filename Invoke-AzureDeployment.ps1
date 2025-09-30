@@ -55,7 +55,7 @@ if (-not (Test-Path $parametersFile)) {
 
 # Construct and execute the deployment command
 try {
-    # === NEW: Discover Client Public IP ===
+    # Discover Client Public IP ===
     Write-Host "Discovering client public IP address..."
     $clientIpAddress = (Invoke-RestMethod -Uri 'https://api.ipify.org').Trim()
     if (-not $clientIpAddress) {
@@ -63,7 +63,7 @@ try {
     }
     Write-Host "Client IP found: $clientIpAddress" -ForegroundColor Cyan
 
-    # === NEW: Get the Object ID of the signed-in user ===
+    #  Get the Object ID of the signed-in user ===
     Write-Host "Getting the Object ID of the current user..."
     $currentUserObjectId = az ad signed-in-user show --query "id" --output tsv
     if ([string]::IsNullOrEmpty($currentUserObjectId)) {
