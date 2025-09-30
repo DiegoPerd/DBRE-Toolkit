@@ -1,7 +1,12 @@
 # Pipeline de Build para el proyecto de BBDD AdventureWorks.Database
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'src/AdventureWorks.Database/*' 
 
 pool:
   vmImage: 'windows-latest'
