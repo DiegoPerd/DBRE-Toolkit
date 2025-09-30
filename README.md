@@ -52,7 +52,7 @@ Deploys the Azure infrastructure defined in the `/IaC` folder.
 ```powershell
 .\Tests\Run-DatabaseTests.ps1 
 ```
-#### Run Database Tests
+#### Run Deployment Tests
 ```powershell
 .\Tests\Run-DeploymentTests.ps1 
 ```
