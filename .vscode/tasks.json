@@ -19,7 +19,7 @@
             "args": [
                 "/Action:Script", 
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
-                "/TargetConnectionString",
+                "/TargetConnectionString:",
                 "Server=localhost;Database=AdventureWorks_Azs;Integrated Security=True;Trust Server Certificate=True;",
                 "/OutputPath:\"${workspaceFolder}/deployment_script.sql\""
             ],
