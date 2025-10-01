@@ -105,11 +105,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\diego\\OneDrive\\Documentos\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
+      "projectUniqueName": "c:\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
       "projectName": "AdventureWorks_Azs.database",
-      "projectPath": "c:\\Users\\diego\\OneDrive\\Documentos\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
+      "projectPath": "c:\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
       "packagesPath": "C:\\Users\\diego\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\diego\\OneDrive\\Documentos\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\obj\\",
+      "outputPath": "c:\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\diego\\AppData\\Roaming\\NuGet\\NuGet.Config"

@@ -10,3 +10,15 @@ c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.
 c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\predeploy.sql
 c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.dll
 c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.pdb
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.dacpac
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.deps.json
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.dll
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\bin\Debug\AdventureWorks_Azs.database.pdb
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.GeneratedMSBuildEditorConfig.editorconfig
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.sourcelink.json
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\Model.xml
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\refactor.xml
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\postdeploy.sql
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\predeploy.sql
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.dll
+c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.pdb

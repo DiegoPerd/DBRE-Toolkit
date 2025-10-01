@@ -12,7 +12,7 @@
 		</CustomData>
 		<CustomData Category="Reference" Type="Assembly">
 			<Metadata Name="LogicalName" Value="AdventureWorks_Azs.database.dll" />
-			<Metadata Name="FileName" Value="c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.dll" />
+			<Metadata Name="FileName" Value="c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.dll" />
 			<Metadata Name="AssemblyName" Value="AdventureWorks_Azs.database" />
 			<Metadata Name="PermissionSet" Value="SAFE" />
 			<Metadata Name="Owner" Value="" />
@@ -20,7 +20,7 @@
 			<Metadata Name="IsVisible" Value="True" />
 			<Metadata Name="IsModelAware" Value="True" />
 			<Metadata Name="SkipCreationIfEmpty" Value="True" />
-			<Metadata Name="AssemblySymbolsName" Value="c:\Users\diego\OneDrive\Documentos\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.pdb" />
+			<Metadata Name="AssemblySymbolsName" Value="c:\Projects\DBRE-Toolkit\src\AdventureWorks_Azs.database\obj\Debug\AdventureWorks_Azs.database.pdb" />
 		</CustomData>
 		<CustomData Category="SqlCmdVariables" Type="SqlCmdVariable" />
 	</Header>
@@ -6926,6 +6926,16 @@ WHERE [CatalogDescription] IS NOT NULL]]></Value>
 			<Relationship Name="Host">
 				<Entry>
 					<References Name="[SalesLT].[uSalesOrderHeader]" />
+				</Entry>
+			</Relationship>
+		</Element>
+		<Element Type="SqlExtendedProperty" Name="[SqlFilegroup].[PRIMARY].[MS_Description]">
+			<Property Name="Value">
+				<Value><![CDATA[N'Primary filegroup for the AdventureWorks sample database.']]></Value>
+			</Property>
+			<Relationship Name="Host">
+				<Entry>
+					<References ExternalSource="BuiltIns" Name="[PRIMARY]" />
 				</Entry>
 			</Relationship>
 		</Element>

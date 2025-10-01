@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "k+RSWTMU8Lk=",
+  "dgSpecHash": "HussUne48wI=",
   "success": true,
-  "projectFilePath": "c:\\Users\\diego\\OneDrive\\Documentos\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
+  "projectFilePath": "c:\\Projects\\DBRE-Toolkit\\src\\AdventureWorks_Azs.database\\AdventureWorks_Azs.database.sqlproj",
   "expectedPackageFiles": [
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.netframework.referenceassemblies\\1.0.3\\microsoft.netframework.referenceassemblies.1.0.3.nupkg.sha512",
     "C:\\Users\\diego\\.nuget\\packages\\microsoft.netframework.referenceassemblies.net20\\1.0.3\\microsoft.netframework.referenceassemblies.net20.1.0.3.nupkg.sha512"
