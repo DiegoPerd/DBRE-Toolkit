@@ -53,21 +53,22 @@ jobs:
       with:
         name: dacpac
     
-         # --- PASO DE DEPURACIÓN TEMPORAL ---
-    - name: 'Debug: Check AZURE_CREDENTIALS secret structure'
-      shell: pwsh
+    # --- PASO DE DEPURACIÓN CORREGIDO ---
+    - name: 'Debug: Check AZURE_CREDENTIALS secret structure'      
+      env:
+        credsJson: ${{ secrets.AZURE_CREDENTIALS }}
+      shell: pwsh      
       run: |
         try {
-          $creds = '${{ secrets.AZURE_CREDENTIALS }}' | ConvertFrom-Json
+          $creds = $env:credsJson | ConvertFrom-Json
           if ($creds.clientId) {
-            Write-Host "✅ Secret parsed successfully. clientId found."
+            Write-Host "✅ Secret parsed successfully from environment variable. clientId found."
           } else {
             Write-Host "❌ Secret parsed, but clientId key is missing."
           }
         } catch {
-          Write-Host "💥 CRITICAL: Failed to parse AZURE_CREDENTIALS as JSON. The secret is malformed."
-          # Opcional: Imprime los primeros 10 caracteres para ver si es un JSON
-          Write-Host "Secret starts with: $(${{ secrets.AZURE_CREDENTIALS }} | Select-String -Pattern '^.{1,10}')"
+          Write-Host "💥 CRITICAL: Failed to parse AZURE_CREDENTIALS from environment variable. The secret is malformed."
+          Write-Host "Error was: $($_.Exception.Message)"
         }
 
     - name: Azure Login
