@@ -2,7 +2,7 @@
 
 This project is a demonstration of modern Database Reliability Engineering (DBRE) practices, showcasing how to manage a database's entire lifecycle—from infrastructure provisioning to software configuration and testing—using code and automation.
 
-## 🚀 Features
+## ✨ Features
 
 This toolkit is built around a set of modular and automated components:
 
@@ -48,7 +48,7 @@ Ensure you have the following tools installed and configured:
 * SqlPackage.exe (install via `dotnet tool install --global Microsoft.SqlPackage`)
 * A local SQL Server instance for development.
 
-## 🚀 How to Use
+## 🗺️ How to Use
 
 ### 1. Deploy Infrastructure
 Deploys the Azure infrastructure defined in the `/IaC` folder.
