@@ -20,7 +20,7 @@
                 "/Action:Script", 
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
-                "/TargetDatabaseName:\"AdventureWorks_Azs.local\"",                
+                "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
                 "/OutputPath:\"${workspaceFolder}/deployment_script.sql\"",
                 "/TargetTrustServerCertificate:True"
             ],
