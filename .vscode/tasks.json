@@ -21,7 +21,8 @@
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
                 "/TargetDatabaseName:\"AdventureWorks_Azs.local\"",                
-                "/OutputPath:\"${workspaceFolder}/deployment_script.sql\""
+                "/OutputPath:\"${workspaceFolder}/deployment_script.sql\"",
+                "/p:TrustServerCertificate=True"
             ],
             "dependsOn": [ "Build" ],
             "group": "build", 
@@ -36,7 +37,8 @@
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
                 "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
-                "/p:BlockOnPossibleDataLoss=True" 
+                "/p:BlockOnPossibleDataLoss=True",
+                "/p:TrustServerCertificate=True"
             ],
             "dependsOn": [ "Build" ],
             "group": "test",
@@ -51,7 +53,8 @@
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
                 "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
-                "/p:BlockOnPossibleDataLoss=False"
+                "/p:BlockOnPossibleDataLoss=False",
+                "/p:TrustServerCertificate=True"
             ],
             "dependsOn": [ "Build" ],
             "group": "test",
