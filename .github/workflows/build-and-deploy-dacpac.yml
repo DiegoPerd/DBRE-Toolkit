@@ -1,0 +1,63 @@
+# .github/workflows/build-and-deploy-dacpac.yml
+
+name: Build and Deploy Database
+
+# Workflow only triggers on main commit
+on:
+  push:
+    branches: [ main ]
+    paths:
+      # Only for database changes
+      - 'src/AdventureWorks_Azs.database/**'
+
+# .dacpac build action
+jobs:
+  build:
+    name: Build .dacpac
+    runs-on: windows-latest 
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1.1
+
+    - name: Build SQL Project
+      run: |
+        msbuild.exe "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj" /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true
+      
+    - name: Upload DACPAC artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: dacpac
+        path: ${{ github.workspace }}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac
+
+  # .dacpac Deployment action
+  deploy:
+    name: Deploy .dacpac to Azure
+    runs-on: ubuntu-latest
+    needs: build 
+    # only if the Pull Request message doesn't contain skip deploy
+    # We do this to prevent high risk deployments (like adding default column or alter columns on large tables )
+    if: ${{ !contains(github.event.head_commit.message, '[skip deploy]') }}
+
+    steps:
+    - name: Download DACPAC artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: dacpac
+    
+    - name: Azure Login
+      uses: azure/login@v1
+      with:
+        # Azure credentials
+        creds: ${{ secrets.AZURE_CREDENTIALS }} 
+
+    - name: Azure SQL Deploy
+      uses: azure/sql-action@v2
+      with:
+        # SQL Connection String
+        connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}        
+        path: 'AdventureWorks_Azs.database.dacpac'
+        action: 'publish'
