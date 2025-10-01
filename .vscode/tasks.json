@@ -19,10 +19,8 @@
             "args": [
                 "/Action:Script", 
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
-                "/TargetServerName:\"localhost\"",
-                "/TargetDatabaseName:\"AdventureWorks_Azs.local\"",                
-                "/OutputPath:\"${workspaceFolder}/deployment_script.sql\"",
-                "/p:TrustServerCertificate=True"
+                "/TargetConnectionString:\"Server=localhost;Database=AdventureWorks_Azs;Integrated Security=True;Trust Server Certificate=True;\"",
+                "/OutputPath:\"${workspaceFolder}/deployment_script.sql\""
             ],
             "dependsOn": [ "Build" ],
             "group": "build", 
