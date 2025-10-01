@@ -99,6 +99,27 @@ This "outer-loop" workflow is fully automated and triggers once your local devel
 ```powershell
 .\Tests\Run-DeploymentTests.ps1 
 ```
+
+## 🛠️ Standalone Utility Scripts
+
+Beyond the main deployment orchestrator, this repository contains scripts that can be run independently for specific configuration tasks.
+
+### Installing DBA Maintenance Tools
+
+The `Install-MaintenanceSolution.ps1` script can be used to install a suite of popular community DBA tools (defined in `config.json`) onto any existing SQL Server instance. This is useful for configuring servers that were not provisioned by this project's IaC workflow.
+
+**Usage:**
+
+The script requires the target server name and will prompt for credentials securely.
+
+```powershell
+# Run the script against a target SQL Server instance
+.\Scripts\Install-MaintenanceSolution.ps1 -ServerInstance "your-server-name.database.windows.net" -CreateJobs
+```
+
+The -CreateJobs flag will create and configure the standard Ola Hallengren maintenance jobs. This is only applicable to SQL Server environments that have a SQL Agent.
+
+
 ## 🛠️ Technologies Used
 
 * PowerShell 7
