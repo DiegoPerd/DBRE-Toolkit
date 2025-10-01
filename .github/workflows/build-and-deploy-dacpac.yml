@@ -56,7 +56,7 @@ jobs:
     - name: Azure Login
       uses: azure/login@v1
       with:
-        auth-type: spn 
+        auth-type: SERVICE_PRINCIPAL
         # Azure credentials
         creds: ${{ secrets.AZURE_CREDENTIALS }} 
 
