@@ -120,7 +120,7 @@ The script requires the target server name and will prompt for credentials secur
 The -CreateJobs flag will create and configure the standard Ola Hallengren maintenance jobs. This is only applicable to SQL Server environments that have a SQL Agent.
 
 
-## 🛠️ Technologies Used
+## 💻 Technologies Used
 
 * PowerShell 7
 * Bicep
