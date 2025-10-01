@@ -1,0 +1,61 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "shell",
+            "command": "dotnet build",
+            "problemMatcher": "$msCompile",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Builds the SQL project and creates the .dacpac file."
+        },
+         {
+            "label": "Generate Deploy Report",
+            "type": "shell",
+            "command": "SqlPackage.exe",
+            "args": [
+                "/Action:Script", 
+                "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
+                "/TargetServerName:\"localhost\"",
+                "/TargetDatabaseName:\"AdventureWorks_Azs.local\"",                
+                "/OutputPath:\"${workspaceFolder}/deployment_script.sql\""
+            ],
+            "dependsOn": [ "Build" ],
+            "group": "build", 
+            "detail": "Generates the T-SQL deployment script without applying it."
+        },
+        {
+            "label": "Deploy Local (Safe)",
+            "type": "shell",
+            "command": "SqlPackage.exe",
+            "args": [
+                "/Action:Publish",
+                "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
+                "/TargetServerName:\"localhost\"",
+                "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
+                "/p:BlockOnPossibleDataLoss=True" 
+            ],
+            "dependsOn": [ "Build" ],
+            "group": "test",
+            "detail": "Deploys to local SQL Server. ABORTS if data loss is possible."
+        },
+        {
+            "label": "Deploy Local (Force)",
+            "type": "shell",
+            "command": "SqlPackage.exe",
+            "args": [
+                "/Action:Publish",
+                "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
+                "/TargetServerName:\"localhost\"",
+                "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
+                "/p:BlockOnPossibleDataLoss=False"
+            ],
+            "dependsOn": [ "Build" ],
+            "group": "test",
+            "detail": "FORCE deploys to local SQL Server, even with potential data loss."
+        }
+    ]
+}
