@@ -20,6 +20,8 @@ This toolkit is built around a set of modular and automated components:
 
 ```text
 .
+├── .github             # Contains the GitHub Actions CI/CD workflow definition.
+├── .vscode             # Contains the VsCode Actions local workflow definition.
 ├── IaC/                # Bicep templates for Infrastructure as Code
 │   ├── main-*.bicep    # Entry points for different deployments
 │   └── modules/        # Reusable Bicep modules
@@ -32,6 +34,19 @@ This toolkit is built around a set of modular and automated components:
 ├── Invoke-AzureDeployment.ps1 # Main orchestration script
 └── README.md
 ```
+## 🚀 Getting Started
+
+Follow these steps to deploy the infrastructure and get the project running.
+
+### Prerequisites
+
+Ensure you have the following tools installed and configured:
+* Git
+* Azure CLI (logged in with `az login`)
+* PowerShell 7+
+* .NET 8 SDK
+* SqlPackage.exe (install via `dotnet tool install --global Microsoft.SqlPackage`)
+* A local SQL Server instance for development.
 
 ## 🚀 How to Use
 
@@ -42,11 +57,39 @@ Deploys the Azure infrastructure defined in the `/IaC` folder.
 ```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-db -EnvironmentName dev
 ```
+Or
 #### Deploy an Azure SQL Managed Instance environment
 ```powershell
 .\Invoke-AzureDeployment.ps1 -DeploymentType sql-mi -EnvironmentName dev
 ```
-### 2. Run Tests
+
+### 2. Workflows
+
+This project is designed around two primary workflows.
+
+## Local Development Workflow
+This is the rapid "inner-loop" cycle for making and testing changes on your local machine.
+
+1. Create a new branch for your feature (git checkout -b feature/my-new-index).
+2. Modify the database code in the .sql files within VS Code.
+3. Generate a deployment report to preview the changes (Ctrl+Shift+P -> Tasks: Run Task -> Generate Deploy Report). This creates a deployment_script.sql file for you to review.
+4. Deploy to your local SQL instance using the appropriate task: Deploy Local (Safe) or Deploy Local (Force).
+5. Test your changes against your local database using SSMS or your preferred tool.
+6. Once satisfied, commit your changes (git commit -m "feat: Add new index for performance").
+
+## CI/CD Workflow (Deploying to Azure)
+This "outer-loop" workflow is fully automated and triggers once your local development is complete.
+
+1. Push your branch to GitHub (git push origin feature/my-new-index).
+2. Create a Pull Request (PR) in GitHub to merge your branch into main. This is the code review and approval step.
+3. Merge the PR. Upon merging, the GitHub Actions pipeline is automatically triggered.
+4. The pipeline will:
+* Build the .dacpac from the source code.
+* Log in to Azure using the configured Service Principal.
+* Deploy the .dacpac to the target Azure SQL Database.
+* You can monitor the entire process in the "Actions" tab of the repository.
+
+### 3. Run Tests
 
 #### Run Database Tests
 ```powershell
@@ -61,6 +104,7 @@ Deploys the Azure infrastructure defined in the `/IaC` folder.
 * PowerShell 7
 * Bicep
 * Azure CLI
+* Visual Studio Code
 * Git & GitHub
 * Azure DevOps (Pipelines)
 * Pester
