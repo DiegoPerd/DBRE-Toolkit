@@ -4,6 +4,9 @@
 -- TRY...CATCH construct. This should be executed from within the scope 
 -- of a CATCH block otherwise it will return without inserting error 
 -- information. 
+
+--COMMENT TO TRIGGER DEPLOY
+
 CREATE PROCEDURE [dbo].[uspLogError] 
     @ErrorLogID [int] = 0 OUTPUT -- contains the ErrorLogID of the row inserted
 AS                               -- by uspLogError in the ErrorLog table
