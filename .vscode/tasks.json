@@ -4,7 +4,7 @@
         {
             "label": "Build",
             "type": "shell",
-            "command": "dotnet build",
+            "command": "dotnet build \"${workspaceFolder}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj\"",            
             "problemMatcher": "$msCompile",
             "group": {
                 "kind": "build",
