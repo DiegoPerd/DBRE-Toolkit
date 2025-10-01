@@ -18,7 +18,7 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
@@ -28,7 +28,7 @@ jobs:
         msbuild.exe "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj" /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true
       
     - name: Upload DACPAC artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: dacpac
         path: ${{ github.workspace }}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac
@@ -44,7 +44,7 @@ jobs:
 
     steps:
     - name: Download DACPAC artifact
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: dacpac
     
