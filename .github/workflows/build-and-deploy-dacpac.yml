@@ -41,9 +41,9 @@ jobs:
   # .dacpac Deployment action
   deploy:
     name: Deploy .dacpac to Azure
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     needs: build 
-    # only if the Pull Request message doesn't contain skip deploy
+    # Only if the Pull Request message doesn't contain skip deploy
     # We do this to prevent high risk deployments (like adding default column or alter columns on large tables )
     if: ${{ !contains(github.event.head_commit.message, '[skip deploy]') }}
 
