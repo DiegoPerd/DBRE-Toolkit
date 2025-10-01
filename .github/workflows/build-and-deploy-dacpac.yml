@@ -53,7 +53,7 @@ jobs:
       with:
         name: dacpac
     
-    # --- PASO DE DEPURACIÓN CORREGIDO ---
+    # Some secret debug check, showing how to debug deployment errors.
     - name: 'Debug: Check AZURE_CREDENTIALS secret structure'      
       env:
         credsJson: ${{ secrets.AZURE_CREDENTIALS }}
