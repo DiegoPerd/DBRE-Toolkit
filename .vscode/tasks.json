@@ -19,8 +19,13 @@
             "args": [
                 "/Action:Script", 
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
+<<<<<<< HEAD
                 "/TargetConnectionString:",
                 "Server=localhost;Database=AdventureWorks_Azs;Integrated Security=True;Trust Server Certificate=True;",
+=======
+                "/TargetServerName:\"localhost\"",
+                "/TargetDatabaseName:\"AdventureWorks_Azs.local\"",                
+>>>>>>> parent of d38eba6 (Fix: Add of TrustServerCertificate parameter to sqlpackage.exe)
                 "/OutputPath:\"${workspaceFolder}/deployment_script.sql\""
             ],
             "dependsOn": [ "Build" ],
@@ -36,8 +41,7 @@
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
                 "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
-                "/p:BlockOnPossibleDataLoss=True",
-                "/p:TrustServerCertificate=True"
+                "/p:BlockOnPossibleDataLoss=True" 
             ],
             "dependsOn": [ "Build" ],
             "group": "test",
@@ -52,8 +56,7 @@
                 "/SourceFile:\"${workspaceFolder}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac\"",
                 "/TargetServerName:\"localhost\"",
                 "/TargetDatabaseName:\"AdventureWorks_Azs\"",                
-                "/p:BlockOnPossibleDataLoss=False",
-                "/p:TrustServerCertificate=True"
+                "/p:BlockOnPossibleDataLoss=False"
             ],
             "dependsOn": [ "Build" ],
             "group": "test",
