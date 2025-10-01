@@ -20,12 +20,17 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+      # --- PASO AÑADIDO ---
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '8.1' 
+
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1.1
 
     - name: Build SQL Project
-      run: |
-        msbuild.exe "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj" /p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true
+      run: dotnet build "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj"
       
     - name: Upload DACPAC artifact
       uses: actions/upload-artifact@v4
