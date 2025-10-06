@@ -1,4 +1,3 @@
-
 [CmdletBinding()]
 param(
     [Parameter(Mandatory=$true)]
@@ -28,23 +27,23 @@ function Install-SqlScriptFromUrl {
     $fileName = Split-Path -Path $Url -Leaf
     $destinationPath = Join-Path -Path $env:TEMP -ChildPath $fileName
    
-    Write-Host "Descargando '$fileName' en '$destinationPath'..."
+    Write-Host "Downloading '$fileName' to '$destinationPath'..."
     
-    # Descargamos el fichero y lo dejamos en $env:temp
+    # Download the file to $env:temp
     try {
         Invoke-WebRequest -Uri $Url -OutFile $destinationPath -UseBasicParsing
-        Write-Host "Descarga completada con éxito en: $destinationPath" -ForegroundColor Green
-        # Instalamos en la instancia.
+        Write-Host "Download completed successfully to: $destinationPath" -ForegroundColor Green
+        # Install on the instance
         try {                
             Invoke-Sqlcmd -InputFile $destinationPath -ServerInstance $ServerInstance -TrustServerCertificate  -Credential $Credential -ErrorAction Stop
-            Write-Host "$filename Instalado correctamente." -ForegroundColor Green
+            Write-Host "$filename installed successfully." -ForegroundColor Green
         }
         catch {
-            Write-Error "Falló la instalacion del fichero $filename. Error: $($_.Exception.Message)"
+            Write-Error "Failed to install the file $filename. Error: $($_.Exception.Message)"
         }
     }
     catch {
-        Write-Error "Falló la descarga del fichero $filename. Error: $($_.Exception.Message)"                       
+        Write-Error "Failed to download the file $filename. Error: $($_.Exception.Message)"                       
     }        
 }
 
@@ -60,16 +59,16 @@ function Install-OlaHallengrenJobs {
         [object]$Configuration
     )
 
-    Write-Host "Creando trabajos del Agente SQL de Ola Hallengren..." -ForegroundColor Yellow
+    Write-Host "Creating Ola Hallengren's SQL Agent jobs..." -ForegroundColor Yellow
 
-    # --- 1. Crear el trabajo de Optimización de Índices ---
+    # --- 1. Create the Index Optimization job ---
     $indexParams = $Configuration.olaHallengrenJobConfig.IndexOptimize
     $templatePath = Join-Path -Path $PSScriptRoot -ChildPath "Templates\Create-Ola-Jobs.sql"
 
-    # Leemos la plantilla SQL
+    # Read the SQL template
     $sqlTemplate = Get-Content -Path $templatePath -Raw
 
-    # Reemplazamos los marcadores de posición
+    # Replace the placeholders
     $finalSql = $sqlTemplate `
         -replace '__FragmentationLow__', $indexParams.FragmentationLow `
         -replace '__FragmentationMedium__', $indexParams.FragmentationMedium `
@@ -78,30 +77,30 @@ function Install-OlaHallengrenJobs {
         -replace '__FragmentationLevel2__', $indexParams.FragmentationLevel2 `
         -replace '__LogToTable__', $indexParams.LogToTable
 
-    # Ejecutamos el SQL final
+    # Execute the final SQL
     try {
         Invoke-Sqlcmd -ServerInstance $ServerInstance -Query $finalSql -TrustServerCertificate -Credential $Credential  -ErrorAction Stop
-        Write-Host "Trabajos creados y configurados correctamente." -ForegroundColor Green
+        Write-Host "Jobs created and configured successfully." -ForegroundColor Green
     }
     catch {
-        Write-Error "Falló la creación de los trabajos. Error: $($_.Exception.Message)"
+        Write-Error "Failed to create the jobs. Error: $($_.Exception.Message)"
     }
 
 }
 
 
-# --- Configuración ---
+# --- Configuration ---
 $projectRoot = Split-Path -Path $PSScriptRoot -Parent
 $configPath = Join-Path -Path $projectRoot -ChildPath "config.json"
-Write-Host "Cargando configuración desde: $configPath"
+Write-Host "Loading configuration from: $configPath"
 $config = Get-Content -Path $configPath -Raw | ConvertFrom-Json
 
 $sqlInstance = $ServerInstance
 
-Write-Host "Iniciando instalación de herramientas en la instancia '$sqlInstance'..." -ForegroundColor Yellow
+Write-Host "Starting tool installation on instance '$sqlInstance'..." -ForegroundColor Yellow
 
 foreach ($tool in $config.toolsToInstall) {
-    Write-Host "Procesando $($tool.name)..."
+    Write-Host "Processing $($tool.name)..."
     Install-SqlScriptFromUrl -Url $tool.url -ServerInstance $sqlInstance -Credential $Credential
 }
 
@@ -111,4 +110,4 @@ if ($CreateJobs){
 
 
 
-Write-Host "Instalación de herramientas finalizada." -ForegroundColor Yellow
+Write-Host "Tool installation finished." -ForegroundColor Yellow
