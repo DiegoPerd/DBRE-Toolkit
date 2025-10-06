@@ -1,0 +1,10 @@
+# File: .sqlfluff
+# Configuration for SQLFluff
+
+[sqlfluff]
+# Dialect to use. For SQL Server, it's tsql.
+dialect = tsql
+sql_file_exts = .sql
+# exclude layout, structure, capitalization, alias, ambigous and reference rules
+exclude_rules = LT*, ST*, CP*, RF*, AL*, AM*
+

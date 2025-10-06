@@ -1,0 +1,11 @@
+# File: .sqlfluffignore
+# Tell sqlfluff to ignore files with syntax it can't parse.
+
+# This file contains the CREATE XML SCHEMA COLLECTION statement.
+src/AdventureWorks_Azs.database/SalesLT/XMLSchemaCollections/ProductDescriptionSchemaCollection.sql
+
+# This file contains the CREATE PRIMARY XML INDEX statement.
+src/AdventureWorks_Azs.database/SalesLT/Tables/ProductModel.sql
+
+# This files contains the CREATE TYPE statement.
+src/AdventureWorks_Azs.database/dbo/UserDefinedTypes/*
