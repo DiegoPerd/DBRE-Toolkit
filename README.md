@@ -13,7 +13,7 @@ This toolkit is built around a set of modular and automated components:
 * **Comprehensive Automated Testing:** The project includes a `Tests` folder with a suite of **Pester** tests:
     * **Integration Tests** that connect to Azure to validate that infrastructure has been deployed correctly (`Deployment.Tests.ps1`).
     * **Data-Driven Tests** that read the `config.json` to dynamically verify that all expected database objects have been installed (`Database.Tests.ps1`).
-* **CI/CD Foundation:** An `azure-pipelines.yml` file defines a Continuous Integration pipeline that automatically builds the database project into a `.dacpac` artifact upon changes to the source code.
+* **CI/CD Foundation:** A `.github/workflows/build-and-deploy-dacpac.yml` file defines a Continuous Integration pipeline that automatically builds the database project into a `.dacpac` artifact upon changes to the source code.
 * **Secure Secret Management:** Implements **Azure Key Vault** to store and retrieve database credentials securely during the deployment and configuration phases, avoiding plain-text secrets.
 
 ## 🚀 Getting Started
