@@ -16,24 +16,6 @@ This toolkit is built around a set of modular and automated components:
 * **CI/CD Foundation:** An `azure-pipelines.yml` file defines a Continuous Integration pipeline that automatically builds the database project into a `.dacpac` artifact upon changes to the source code.
 * **Secure Secret Management:** Implements **Azure Key Vault** to store and retrieve database credentials securely during the deployment and configuration phases, avoiding plain-text secrets.
 
-## 📁 Project Structure
-
-```text
-.
-├── .github             # Contains the GitHub Actions CI/CD workflow definition.
-├── .vscode             # Contains the VsCode Actions local workflow definition.
-├── IaC/                # Bicep templates for Infrastructure as Code
-│   ├── main-*.bicep    # Entry points for different deployments
-│   └── modules/        # Reusable Bicep modules
-├── Scripts/            # PowerShell scripts for post-deployment configuration
-├── src/                # Source code for the database project (.sqlproj)
-├── Tests/              # Pester tests (Integration and Database)
-├── .gitignore
-├── azure-pipelines.yml # CI pipeline definition
-├── config.json         # Manifest for tool installation
-├── Invoke-AzureDeployment.ps1 # Main orchestration script
-└── README.md
-```
 ## 🚀 Getting Started
 
 To learn more about the project's architecture, how to deploy it, and the development workflows, please refer to the detailed documentation:
