@@ -20,7 +20,19 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-     
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+
+    # Run the linter. If it finds any issues, this command will fail,
+    # stopping the workflow before the build and deploy steps.
+    - name: Install and run SQLFluff linter
+      run: |
+        pip install sqlfluff        
+        sqlfluff lint src/AdventureWorks_Azs.database/
+      shell: pwsh
+      
     - name: Setup .NET SDK
       uses: actions/setup-dotnet@v4
       with:
