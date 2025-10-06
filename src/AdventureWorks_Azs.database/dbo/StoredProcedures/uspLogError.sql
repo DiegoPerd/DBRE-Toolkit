@@ -7,7 +7,7 @@
 
 --COMMENT TO TRIGGER DEPLOY 10--
 
-CREATE PROCEDURE [dbo].[uspLogError] 
+CREATE PROCEDURE [dbo].[sp_uspLogError] 
     @ErrorLogID [int] = 0 OUTPUT -- contains the ErrorLogID of the row inserted
 AS                               -- by uspLogError in the ErrorLog table
 BEGIN
