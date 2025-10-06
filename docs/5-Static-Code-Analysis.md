@@ -19,7 +19,6 @@ A `.sqlfluff` file in the root of the repository defines the linter's behavior. 
 * **`dialect = tsql`**: Specifies that we are linting Transact-SQL code.
 * **`rules = core, tsql.sp_prefix`**: We explicitly activate the `core` set of rules, plus specific dialect and convention rules that are disabled by default.
 * **`exclude_rules`**: We disable specific layout and style rules from the `core` set to focus on more critical issues first.
-* **Rule-specific configuration**: We configure active rules, such as forcing keywords to be uppercase.
 
 ### Ignoring Unparsable Files (`.sqlfluffignore`)
 
