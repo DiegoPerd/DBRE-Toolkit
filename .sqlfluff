@@ -5,6 +5,7 @@
 # Dialect to use. For SQL Server, it's tsql.
 dialect = tsql
 sql_file_exts = .sql
+rules = core, tsql.sp_prefix
 # exclude layout, structure, capitalization, alias, ambigous and reference rules
-exclude_rules = LT*, ST*, CP*, RF*, AL*, AM*
+exclude_rules = LT*, ST*, CP*, RF*, AM*, AL01
 
