@@ -7,7 +7,7 @@
 
 --COMMENT TO TRIGGER DEPLOY 10--
 
-CREATE PROCEDURE [dbo].[uspLogError] 
+CREATE PROCEDURE [dbo].[sp_uspLogError] 
     @ErrorLogID [int] = 0 OUTPUT -- contains the ErrorLogID of the row inserted
 AS                               -- by uspLogError in the ErrorLog table
 BEGIN
@@ -25,7 +25,7 @@ BEGIN
         -- Return if inside an uncommittable transaction.
         -- Data insertion/modification is not allowed when 
         -- a transaction is in an uncommittable state.
-        IF XACT_STATE() <> 0
+        IF XACT_STATE() = -1
         BEGIN
             PRINT 'Cannot log error since the current transaction is in an uncommittable state. ' 
                 + 'Rollback the transaction before executing uspLogError in order to successfully log error information.';
