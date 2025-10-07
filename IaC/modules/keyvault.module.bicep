@@ -19,7 +19,7 @@ param sqlAdminPassword string
 param principalId string // user's ID
 
 // === Variables ===
-var keyVaultName = 'kv-${baseName}'
+var keyVaultName = 'kv-${baseName}-${uniqueString(resourceGroup().id)}'
 
 // === Resources ===
 resource keyVault 'Microsoft.KeyVault/vaults@2024-11-01' = {

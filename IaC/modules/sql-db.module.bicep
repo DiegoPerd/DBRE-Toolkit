@@ -26,7 +26,7 @@ param clientIpAddress string
 
 // === Variables ===
 // Names for our resources
-var sqlServerName = 'sql-${baseName}'
+var sqlServerName = 'sql-${baseName}-${uniqueString(resourceGroup().id)}'
 var sqlDatabaseName = 'db-${baseName}'
 
 
