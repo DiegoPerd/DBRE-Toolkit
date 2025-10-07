@@ -68,6 +68,17 @@ module sqlModule 'modules/sql-db.module.bicep' = {
   }
 }
 
+
+// Deploy the Monitoring module
+module monitoringModule 'modules/monitoring.module.bicep' = {
+  name: 'monitoringDeployment'
+  params: {
+    alertRuleName: 'sql-high-cpu-alert'    
+    targetResourceId: sqlModule.outputs.sqlDatabaseId    
+    actionGroupName: 'dbre-ag'
+  }
+}
+
 // === Outputs ===
 output sqlServerName string = sqlModule.outputs.sqlServerName
 output keyVaultName string = keyVaultModule.outputs.keyVaultName

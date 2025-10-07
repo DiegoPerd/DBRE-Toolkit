@@ -110,4 +110,4 @@ resource allowClientIpsRule 'Microsoft.Sql/servers/firewallRules@2023-08-01' = {
 
 output sqlServerName string = sqlServer.name
 output sqlDatabaseName string = sqlDatabase.name
-
+output sqlDatabaseId string = sqlDatabase.id
