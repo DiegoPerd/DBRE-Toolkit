@@ -10,7 +10,7 @@ param baseName string
 
 
 // === Variables ===
-var logAnalyticsWorkspaceName = 'log-${baseName}'
+var logAnalyticsWorkspaceName = 'log-${baseName}-${uniqueString(resourceGroup().id)}'
 
 
 // === Resources ===
