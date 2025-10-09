@@ -59,8 +59,10 @@ jobs:
       - name: Create Pre-Deployment Database Copy
         id: create_copy
         run: |
-          $server = "${{ steps.db_context.outputs.serverName }}"
+          $server = "${{ steps.db_context.outputs.serverName }}"          
+          Write-Host $server
           $db = "${{ steps.db_context.outputs.databaseName }}"
+          Write-Host $db
           $rg = (Get-AzSqlServer -ServerName $server).ResourceGroupName
           
           # Dynamically create the copy name based on the database name
