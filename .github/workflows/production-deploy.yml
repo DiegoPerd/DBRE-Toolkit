@@ -2,14 +2,13 @@
 
 name: Deploy to Production
 
-
 on:
-  # Trigger only on pushes to the main branch
   push:
     branches: [ main ]
     paths:
       # Only run on changes to the database project
       - 'src/AdventureWorks_Azs.database/**'
+
   # Allows to run this workflow manually from the Actions tab
   workflow_dispatch:
 
@@ -18,21 +17,100 @@ jobs:
     name: Deploy to Production
     environment: Production
     runs-on: windows-latest
+    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
       
-      - name: Build SQL Project
-        run: dotnet build "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj"
-
       - name: Azure Login
         uses: azure/login@v1
         with:        
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: Deploy to Production Environment
-        uses: azure/sql-action@v2
+      # Parse Connection String to get properties ---
+      - name: Set Database Context from Connection String
+        id: db_context
+        run: |
+          $connStr = "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
+          $server = ($connStr -split ';') | Where-Object { $_ -like 'Server=*' } | ForEach-Object { ($_ -split '=')[1] }
+          $dbName = ($connStr -split ';') | Where-Object { $_ -like 'Database=*' } | ForEach-Object { ($_ -split '=')[1] }
+          # Remove tcp: prefix from server name if present
+          $serverName = $server.Replace("tcp:", "")
+          
+          # Save names as outputs for other steps
+          echo "serverName=$serverName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+          echo "databaseName=$dbName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        shell: pwsh
+
+      
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
         with:
+          python-version: '3.10'
+
+      - name: Install and run SQLFluff linter
+        run: pip install sqlfluff && sqlfluff lint src/AdventureWorks_Azs.database/
+        shell: pwsh
+
+      - name: Build SQL Project
+        run: dotnet build "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj"
+
+        # Create predeployment database snapshot
+      - name: Create Pre-Deployment Database Copy
+        id: create_copy
+        run: |
+          $server = "${{ steps.db_context.outputs.serverName }}"
+          $db = "${{ steps.db_context.outputs.databaseName }}"
+          $rg = (Get-AzSqlServer -ServerName $server).ResourceGroupName
+          
+          # Dynamically create the copy name based on the database name
+          $dbCopyName = "${db}_$(Get-Date -Format 'yyyyMMddHHmm')"
+          Write-Host "Creating database copy: $dbCopyName"
+          New-AzSqlDatabaseCopy -ResourceGroupName $rg -ServerName $server -DatabaseName $db -CopyDatabaseName $dbCopyName
+          
+          echo "dbCopyName=$dbCopyName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
+        shell: pwsh
+        
+      - name: Deploy to prod Environment
+        uses: azure/sql-action@v2
+        with:          
           connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
           path: '${{ github.workspace }}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac'
           action: 'publish'
+
+       # --- STEP 4: RUN POST-DEPLOYMENT TESTS ---
+      - name: Run Post-Deployment Tests
+        run: Write-Host "Running performance tests against Production..."
+        shell: pwsh
+
+      - name: Rollback on Failure
+        if: failure()
+        run: |
+          Write-Host "Deployment failed! Starting rollback..."
+          $server = "${{ steps.db_context.outputs.serverName }}"
+          $db = "${{ steps.db_context.outputs.databaseName }}"
+          $dbCopy = "${{ steps.create_copy.outputs.dbCopyName }}"
+          $rg = (Get-AzSqlServer -ServerName $server).ResourceGroupName
+          $dbFailedName = "${db}_failed_$(Get-Date -Format 'yyyyMMddHHmm')"
+
+          Write-Host "Renaming failed DB to $dbFailedName and activating copy: $dbCopy"
+          Rename-AzSqlDatabase -Name $db -NewName $dbFailedName -ResourceGroupName $rg -ServerName $server
+          Rename-AzSqlDatabase -Name $dbCopy -NewName $db -ResourceGroupName $rg -ServerName $server
+        shell: pwsh
+
+      # --- CLEANUP STEP (CONDITIONAL) ---
+      - name: Cleanup on Success
+        if: success()
+        run: |
+          Write-Host "Deployment successful! Cleaning up database copy..."
+          $server = "${{ steps.db_context.outputs.serverName }}"
+          $dbCopy = "${{ steps.create_copy.outputs.dbCopyName }}"
+          $rg = (Get-AzSqlServer -ServerName $server).ResourceGroupName
+
+          Write-Host "Deleting temporary database copy: $dbCopy"
+          Remove-AzSqlDatabase -DatabaseName $dbCopy -ResourceGroupName $rg -ServerName $server -Force
+        shell: pwsh
