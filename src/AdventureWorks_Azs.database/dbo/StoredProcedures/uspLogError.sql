@@ -7,6 +7,7 @@
 
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 --COMMENT TO TRIGGER DEPLOY 13--
 =======
 --COMMENT TO TRIGGER DEPLOY 12--
@@ -14,6 +15,9 @@
 =======
 --COMMENT TO TRIGGER DEPLOY 13--
 >>>>>>> e790b52 (chore: comment to trigger)
+=======
+--COMMENT TO TRIGGER DEPLOY 14--
+>>>>>>> fee2582 (chore: coment)
 
 CREATE PROCEDURE [dbo].[uspLogError] 
     @ErrorLogID [int] = 0 OUTPUT -- contains the ErrorLogID of the row inserted
