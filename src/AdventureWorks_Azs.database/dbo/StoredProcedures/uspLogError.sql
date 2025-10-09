@@ -5,7 +5,11 @@
 -- of a CATCH block otherwise it will return without inserting error 
 -- information. 
 
+<<<<<<< HEAD
 --COMMENT TO TRIGGER DEPLOY 13--
+=======
+--COMMENT TO TRIGGER DEPLOY 12--
+>>>>>>> 9d772c1 (chore: comment to test deploy)
 
 CREATE PROCEDURE [dbo].[uspLogError] 
     @ErrorLogID [int] = 0 OUTPUT -- contains the ErrorLogID of the row inserted
