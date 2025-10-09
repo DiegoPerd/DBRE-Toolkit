@@ -20,6 +20,8 @@ param clientIpAddress string
 @description('The Object ID of the principal to grant Key Vault access.')
 param principalId string 
 
+@description('The email address for alert notifications.')
+param notificationEmail string
 
 // === Module Deployments ===
 
@@ -69,13 +71,22 @@ module sqlModule 'modules/sql-db.module.bicep' = {
 }
 
 
+// Add this block before the monitoringModule
+module actionGroupModule 'modules/action-group.module.bicep' = {
+  name: 'actionGroupDeployment'
+  params: {
+    actionGroupName: 'ag-${baseName}' // ag for Action Group
+    emailReceiver: notificationEmail
+  }
+}
+
 // Deploy the Monitoring module
 module monitoringModule 'modules/monitoring.module.bicep' = {
   name: 'monitoringDeployment'
   params: {
     alertRuleName: 'sql-high-cpu-alert'    
     targetResourceId: sqlModule.outputs.sqlDatabaseId    
-    actionGroupName: 'dbre-ag'
+    actionGroupName: actionGroupModule.outputs.name
   }
 }
 
