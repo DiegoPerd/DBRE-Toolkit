@@ -33,7 +33,7 @@ jobs:
         id: db_context
         run: |
           $connStr = "${{ secrets.AZURE_SQL_CONNECTION_STRING }}"
-          $server = ($connStr -split ';') | Where-Object { $_ -like 'Server=*' } | ForEach-Object { ($_ -split '=')[1] }
+          $serverFqdn = ($connStr -split ';') | Where-Object { $_ -like 'Server=*' } | ForEach-Object { ($_ -split '=')[1] }
           $dbName = ($connStr -split ';') | Where-Object { $_ -like 'Initial Catalog=*' } | ForEach-Object { ($_ -split '=')[1] }
           # Remove tcp: prefix from server name if present
           # Remove the FQDN part to get the short server name
