@@ -26,6 +26,7 @@ jobs:
         uses: azure/login@v1
         with:        
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+          enable-AzPSSession: true 
 
       # Parse Connection String to get properties ---
       - name: Set Database Context from Connection String
