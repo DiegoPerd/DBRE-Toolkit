@@ -36,7 +36,9 @@ jobs:
           $server = ($connStr -split ';') | Where-Object { $_ -like 'Server=*' } | ForEach-Object { ($_ -split '=')[1] }
           $dbName = ($connStr -split ';') | Where-Object { $_ -like 'Initial Catalog=*' } | ForEach-Object { ($_ -split '=')[1] }
           # Remove tcp: prefix from server name if present
-          $serverName = $server.Replace("tcp:", "")
+          # Remove the FQDN part to get the short server name
+          $serverName = ($serverFqdn -split '.database.windows.net')[0].Replace("tcp:", "")
+          
           
           # Save names as outputs for other steps
           echo "serverName=$serverName" | Out-File -FilePath $env:GITHUB_OUTPUT -Encoding utf8 -Append
