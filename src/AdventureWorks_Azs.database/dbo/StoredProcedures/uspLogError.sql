@@ -5,7 +5,6 @@
 -- of a CATCH block otherwise it will return without inserting error 
 -- information. 
 
-
 --COMMENT TO TRIGGER DEPLOY 13--
 
 
