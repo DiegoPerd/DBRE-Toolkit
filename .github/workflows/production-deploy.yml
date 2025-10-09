@@ -1,0 +1,36 @@
+# .github/workflows/production-deploy.yml
+
+name: Deploy to Production
+
+
+on:
+  # Trigger only on pushes to the main branch
+  push:
+    branches: [ main ]
+  
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  deploy_to_production:
+    name: Deploy to Production
+    environment: Production
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Build SQL Project
+        run: dotnet build "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj"
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:        
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Production Environment
+        uses: azure/sql-action@v2
+        with:
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          path: '${{ github.workspace }}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac'
+          action: 'publish'

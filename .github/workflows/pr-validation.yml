@@ -1,0 +1,59 @@
+# .github/workflows/pr-validation.yml
+
+name: Validate PR and Deploy to Non-Production
+
+
+on:  
+  # Trigger only on pull requests targeting the main branch
+  pull_request:
+    branches: [ main ]
+
+  # Allows to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+jobs:
+  # This single job will run for each environment defined in the matrix
+  deploy_to_non_prod:
+    name: Deploy to ${{ matrix.environment }}
+    runs-on: windows-latest
+    
+    # Define the matrix strategy
+    strategy:
+      matrix:
+        # Define a variable 'environment' with the list of environments
+        environment: [ 'DEV', 'QA' ]
+
+    # Associate the job run with the correct environment from the matrix
+    environment: ${{ matrix.environment }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install and run SQLFluff linter
+        run: pip install sqlfluff && sqlfluff lint src/AdventureWorks_Azs.database/
+        shell: pwsh
+
+      - name: Build SQL Project
+        run: dotnet build "${{ github.workspace }}/src/AdventureWorks_Azs.database/AdventureWorks_Azs.database.sqlproj"
+
+      - name: Azure Login
+        uses: azure/login@v1
+        with:        
+          creds: ${{ secrets.AZURE_CREDENTIALS }} # This will use the correct secret for DEV or QA
+
+      - name: Deploy to ${{ matrix.environment }} Environment
+        uses: azure/sql-action@v2
+        with:          
+          connection-string: ${{ secrets.AZURE_SQL_CONNECTION_STRING }}
+          path: '${{ github.workspace }}/src/AdventureWorks_Azs.database/bin/Debug/AdventureWorks_Azs.database.dacpac'
+          action: 'publish'
+      
+      - name: Run Tests on ${{ matrix.environment }} (Simulation)
+        run: Write-Host "Simulating tests on ${{ matrix.environment }}..."
+        shell: pwsh
