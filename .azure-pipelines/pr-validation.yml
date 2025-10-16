@@ -9,31 +9,58 @@ pr:
     include:
     - 'src/AdventureWorks_Azs.database/**'
 
-jobs:
-- job: RunForAllEnvironments
-  displayName: 'Validate and Deploy PR to Non-Prod'
-# Define the matrix strategy
-  strategy:
-    matrix:
-      DEV:
-        environmentName: 'DEV'
-        serviceConnection: 'DEV Azure Connection' 
-        variableGroup: 'DEV Secrets'        
-      QA:
-        environmentName: 'QA'
-        serviceConnection: 'QA Azure Connection'  
-        variableGroup: 'QA Secrets'         
+# jobs:
+# - job: RunForAllEnvironments
+#   displayName: 'Validate and Deploy PR to Non-Prod'
+# # Define the matrix strategy
+#   strategy:
+#     matrix:
+#       DEV:
+#         environmentName: 'DEV'
+#         serviceConnection: 'DEV Azure Connection' 
+#         variableGroup: 'DEV Secrets'        
+#       QA:
+#         environmentName: 'QA'
+#         serviceConnection: 'QA Azure Connection'  
+#         variableGroup: 'QA Secrets'         
+
+parameters:
+- name: environments
+  type: object
+  default:
+  - name: DEV
+    serviceConnection: 'DEV Azure Connection' 
+    variableGroup: 'DEV Secrets' 
+  - name: QA
+    serviceConnection: 'QA Azure Connection'  
+    variableGroup: 'QA Secrets'         
 
   pool:
     vmImage: 'windows-latest'
 
-# Link the variable group passed as a parameter
-  variables:
-    - group: DEV Secrets #placeholder
-  
-  steps:
-    - template: pr-deploy-steps.yml
+
+  # steps:
+  #   - template: pr-deploy-steps.yml
+  #     parameters:
+  #       environmentName: $(environmentName)
+  #       serviceConnection: $(serviceConnection)
+  #       variableGroup: $(variableGroup)
+
+  # Use a compile-time loop to generate a job for each environment
+jobs:
+- ${{ each env in parameters.environments }}:
+  - job: Deploy_${{ env.name }} # Creates dynamic job names: Deploy_DEV, Deploy_QA
+    displayName: 'Validate and Deploy to ${{ env.name }}'
+    pool:
+      vmImage: 'windows-latest'
+    
+    # The variable group is now defined at the job level, before runtime, solving the error
+    variables:
+    - group: ${{ env.variableGroup }}
+
+    steps:
+    # Call the template and pass the parameters for this specific environment
+    - template: deploy-steps.yml
       parameters:
-        environmentName: $(environmentName)
-        serviceConnection: $(serviceConnection)
-        variableGroup: $(variableGroup)
+        environmentName: ${{ env.name }}
+        serviceConnection: ${{ env.serviceConnection }}

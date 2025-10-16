@@ -1,19 +1,14 @@
 # .azure-pipelines/deploy-steps.yml
-# This is a reusable template containing the deployment steps.
+# This template contains the reusable steps for deployment and testing.
 
 parameters:
 - name: environmentName
   type: string
 - name: serviceConnection
   type: string
-- name: variableGroup
-  type: string
 
 steps:
 - checkout: self
-
-- variables:
-  - group: ${{ variableGroup }}
 
 - task: UsePythonVersion@0
   displayName: 'Set up Python 3.10'
