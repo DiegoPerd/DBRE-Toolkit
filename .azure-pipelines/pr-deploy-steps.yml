@@ -1,0 +1,47 @@
+# .azure-pipelines/deploy-steps.yml
+# This is a reusable template containing the deployment steps.
+
+parameters:
+- name: environmentName
+  type: string
+- name: serviceConnection
+  type: string
+- name: variableGroup
+  type: string
+
+steps:
+- checkout: self
+
+# Link the variable group passed as a parameter
+- variables:
+  - group: ${{ parameters.variableGroup }}
+
+- task: UsePythonVersion@0
+  displayName: 'Set up Python 3.10'
+  inputs:
+    versionSpec: '3.10'
+
+- script: |
+    pip install sqlfluff
+    sqlfluff lint src/AdventureWorks_Azs.database/
+  displayName: 'Install and run SQLFluff linter'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Build SQL Project'
+  inputs:
+    command: 'build'
+    projects: '**/AdventureWorks_Azs.database.sqlproj'
+
+- task: SqlAzureDacpacDeployment@1
+  displayName: 'Deploy DACPAC to ${{ parameters.environmentName }}'
+  inputs:
+    azureSubscription: ${{ parameters.serviceConnection }}
+    AuthenticationType: 'servicePrincipal'
+    ConnectionString: $(sqlConnectionString)
+    DacpacFile: '$(System.DefaultWorkingDirectory)/**/AdventureWorks_Azs.database.dacpac'
+
+- task: PowerShell@2
+  displayName: 'Run Tests on ${{ parameters.environmentName }} (Simulation)'
+  inputs:
+    targetType: 'inline'
+    script: 'Write-Host "Simulating tests on ${{ parameters.environmentName }}..."'
