@@ -45,7 +45,7 @@ jobs:
         - task: SqlAzureDacpacDeployment@1
           displayName: 'Deploy DACPAC to Production'
           inputs:
-            azureSubscription: 'PRO Azure Connection' # <--- Reemplaza con el nombre de tu Service Connection de PROD
+            azureSubscription: 'PRO Azure Connection' 
             AuthenticationType: 'servicePrincipal'
             ConnectionString: $(sqlConnectionString)
             DacpacFile: '$(System.DefaultWorkingDirectory)/**/AdventureWorks_Azs.database.dacpac'
