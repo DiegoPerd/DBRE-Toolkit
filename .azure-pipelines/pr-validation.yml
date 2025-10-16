@@ -27,6 +27,9 @@ jobs:
   pool:
     vmImage: 'windows-latest'
 
+# Link the variable group passed as a parameter
+  variables:
+    - group: $(variableGroup)
   
   steps:
     - template: pr-deploy-steps.yml

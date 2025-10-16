@@ -12,10 +12,6 @@ parameters:
 steps:
 - checkout: self
 
-# Link the variable group passed as a parameter
-- variables:
-  - group: ${{ parameters.variableGroup }}
-
 - task: UsePythonVersion@0
   displayName: 'Set up Python 3.10'
   inputs:
