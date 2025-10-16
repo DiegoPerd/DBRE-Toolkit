@@ -35,9 +35,6 @@ parameters:
     serviceConnection: 'QA Azure Connection'  
     variableGroup: 'QA Secrets'         
 
-  pool:
-    vmImage: 'windows-latest'
-
 
   # steps:
   #   - template: pr-deploy-steps.yml
