@@ -9,27 +9,25 @@ pr:
     include:
     - 'src/AdventureWorks_Azs.database/**'
 
-# Define the matrix strategy
-strategy:
-  matrix:
-    DEV:
-      environmentName: 'DEV'
-      serviceConnection: 'DEV Azure Connection' 
-      variableGroup: 'DEV Secrets'        
-    QA:
-      environmentName: 'QA'
-      serviceConnection: 'QA Azure Connection'  
-      variableGroup: 'QA Secrets'         
-
-pool:
-  vmImage: 'windows-latest'
-
 jobs:
-- deployment: DeployNonProd
-  displayName: 'Deploy to ${{ variables.environmentName }}'
-  # Link the job to the ADO Environment for deployment history
-  environment: ${{ variables.environmentName }}
-  
+- job: RunForAllEnvironments
+  displayName: 'Validate and Deploy PR to Non-Prod'
+# Define the matrix strategy
+  strategy:
+    matrix:
+      DEV:
+        environmentName: 'DEV'
+        serviceConnection: 'DEV Azure Connection' 
+        variableGroup: 'DEV Secrets'        
+      QA:
+        environmentName: 'QA'
+        serviceConnection: 'QA Azure Connection'  
+        variableGroup: 'QA Secrets'         
+
+  pool:
+    vmImage: 'windows-latest'
+
+
   # Link the variable group for this specific matrix leg
   variables:
   - group: ${{ variables.variableGroup }}
