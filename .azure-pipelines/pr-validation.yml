@@ -57,7 +57,7 @@ jobs:
 
     steps:
     # Call the template and pass the parameters for this specific environment
-    - template: deploy-steps.yml
+    - template: pr-deploy-steps.yml
       parameters:
         environmentName: ${{ env.name }}
         serviceConnection: ${{ env.serviceConnection }}
