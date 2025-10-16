@@ -30,7 +30,7 @@ steps:
   displayName: 'Deploy DACPAC to ${{ parameters.environmentName }}'
   inputs:
     azureSubscription: ${{ parameters.serviceConnection }}
-    AuthenticationType: 'servicePrincipal'
+    AuthenticationType: 'connectionString'
     ConnectionString: $(sqlConnectionString)
     DacpacFile: '$(System.DefaultWorkingDirectory)/**/AdventureWorks_Azs.database.dacpac'
 
