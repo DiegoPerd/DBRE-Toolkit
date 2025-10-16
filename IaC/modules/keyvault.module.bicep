@@ -18,6 +18,12 @@ param sqlAdminPassword string
 @description('The object ID of the user or principal to grant secret access to.')
 param principalId string // user's ID
 
+@description('The value for the SQL Server instance.')
+param sqlServerName string 
+
+@description('The value for the SQL Database.')
+param sqlDatabaseName string 
+
 // === Variables ===
 var keyVaultName = 'kv-${baseName}-${uniqueString(resourceGroup().id)}'
 
@@ -61,6 +67,16 @@ resource sqlUsernameSecret 'Microsoft.KeyVault/vaults/secrets@2024-11-01' = {
   name: 'sqlAdminLogin' 
   properties: {
     value: sqlAdminLogin
+  }
+}
+
+
+// Create a second secret for the SQL connection string
+resource sqlConnString 'Microsoft.KeyVault/vaults/secrets@2024-11-01' = {
+  parent: keyVault
+  name: 'sqlConnectionString' 
+  properties: {
+    value: 'Server=tcp:${sqlServerName}.${environment().suffixes.sqlServerHostname},1433;Initial Catalog=${sqlDatabaseName};Persist Security Info=False;User ID=${sqlAdminLogin}};Password=${sqlAdminPassword};MultipleActiveResultSets=False;Encrypt=False;TrustServerCertificate=True;Connection Timeout=30;'
   }
 }
 

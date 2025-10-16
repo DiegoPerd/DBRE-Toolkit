@@ -65,7 +65,7 @@ resource dcrAssociation 'Microsoft.Insights/dataCollectionRuleAssociations@2023-
   }
 }
 
-// THE DIAGNOSTIC SETTING IS NOW CREATED HERE
+// Create the sql diagnostics setting
 resource sqlDbDiagnostics 'Microsoft.Insights/diagnosticSettings@2021-05-01-preview' = {
   name: 'sql-db-diagnostics'
   scope: sqlDatabase 

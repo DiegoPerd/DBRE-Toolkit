@@ -23,19 +23,9 @@ param principalId string
 @description('The email address for alert notifications.')
 param notificationEmail string
 
+
 // === Module Deployments ===
 
-// Deploy the Key Vault and store the SQL password in it
-module keyVaultModule './modules/keyvault.module.bicep' = {
-  name: 'keyVaultDeployment'
-  params: {
-    baseName: baseName
-    location: location        
-    sqlAdminLogin: sqlAdminLogin
-    sqlAdminPassword: sqlAdminPassword
-    principalId: principalId 
-  }
-}
 
 // Deploy the Log Analytics Workspace
 module logAnalyticsModule 'modules/log-analytics.module.bicep' = {
@@ -70,6 +60,19 @@ module sqlModule 'modules/sql-db.module.bicep' = {
   }
 }
 
+// Deploy the Key Vault and store the SQL password in it
+module keyVaultModule './modules/keyvault.module.bicep' = {
+  name: 'keyVaultDeployment'
+  params: {
+    baseName: baseName
+    location: location        
+    sqlAdminLogin: sqlAdminLogin
+    sqlAdminPassword: sqlAdminPassword
+    sqlServerName: sqlModule.outputs.sqlServerName
+    sqlDatabaseName: sqlModule.outputs.sqlDatabaseName
+    principalId: principalId 
+  }
+}
 
 // Add this block before the monitoringModule
 module actionGroupModule 'modules/action-group.module.bicep' = {

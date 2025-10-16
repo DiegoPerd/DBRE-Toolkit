@@ -1,0 +1,51 @@
+# .azure-pipelines/deploy-to-production.yml
+
+# Trigger on pushes to the 'main' branch
+trigger:
+  branches:
+    include:
+    - main
+  paths:
+    include:
+    - 'src/AdventureWorks_Azs.database/**'
+
+pool:
+  vmImage: 'windows-latest'
+
+jobs:
+- deployment: DeployProduction
+  displayName: 'Deploy to Production'
+  environment: 'PRO' 
+  
+  variables:
+  - group: 'PRO Secrets' # <--- Reemplaza con el nombre de tu Variable Group de PROD
+
+  strategy:
+    runOnce:
+      deploy:
+        steps:
+        - checkout: self        
+
+        - task: UsePythonVersion@0
+          displayName: 'Set up Python 3.10'
+          inputs:
+            versionSpec: '3.10'
+
+        - script: |
+            pip install sqlfluff
+            sqlfluff lint src/AdventureWorks_Azs.database/
+          displayName: 'Install and run SQLFluff linter'
+
+        - task: DotNetCoreCLI@2
+          displayName: 'Build SQL Project'
+          inputs:
+            command: 'build'
+            projects: '**/AdventureWorks_Azs.database.sqlproj'
+
+        - task: SqlAzureDacpacDeployment@1
+          displayName: 'Deploy DACPAC to Production'
+          inputs:
+            azureSubscription: 'PRO Azure Connection' # <--- Reemplaza con el nombre de tu Service Connection de PROD
+            AuthenticationType: 'servicePrincipal'
+            ConnectionString: $(sqlConnectionString)
+            DacpacFile: '$(System.DefaultWorkingDirectory)/**/AdventureWorks_Azs.database.dacpac'
