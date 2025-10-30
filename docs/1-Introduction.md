@@ -18,6 +18,7 @@ Browse the sections of this documentation to understand each component of the pr
 ## 📁 Project Structure
 
 ```text
+├── .azure-pipelines/   # Contains the Azure Devops pipelines definition.
 ├── .github/            # Contains the GitHub Actions CI/CD workflow definition.
 ├── .vscode/            # Contains the VsCode Actions local workflow definition.
 ├── docs/               # Contains the documentation md files.
